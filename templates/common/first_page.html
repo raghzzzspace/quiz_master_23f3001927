@@ -1,0 +1,47 @@
+{% extends "common/base.html" %}
+
+{% block title %}Quiz Master - Welcome{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8 text-center">
+            <h1 class="brand">Quizzy Quest</h1>
+            <p class="subtitle">Your go-to platform for quizzes and learning. Test your knowledge and improve your skills!</p>
+            <a href="{{ url_for('first_page') }}" class="btn btn-custom btn-lg" style="display: inline-block; padding: 12px 25px; font-size: 18px; font-weight: bold; color: #6c63ff; background-color: white; border-radius: 30px; border: 2px solid #6c63ff; transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; margin-top: 15px;">Get Started</a>
+        </div>
+    </div>
+
+    <!-- Role Selection Section -->
+    <div class="row justify-content-center">
+        <!-- Admin Section -->
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #6c63ff, #3c3b6e);">
+                <div class="card-body text-center">
+                    <img src="https://static.vecteezy.com/system/resources/previews/019/194/935/non_2x/global-admin-icon-color-outline-vector.jpg" alt="Admin Image" class="img-fluid rounded-circle mb-3" style="max-width: 120px;">
+                    <h4 class="card-title text-white">Admin Login</h4>
+                    <p class="card-text text-white">Manage and oversee the quiz platform.</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ url_for('login') }}" class="btn btn-custom btn-lg" style="display: inline-block; padding: 12px 25px; font-size: 18px; font-weight: bold; color: #6c63ff; background-color: white; border-radius: 30px; border: 2px solid #6c63ff; transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; margin-top: 15px;">Admin Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Section -->
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #6c63ff, #3c3b6e);">
+                <div class="card-body text-center">
+                    <img src="https://static-00.iconduck.com/assets.00/user-icon-512x512-x23sj495.png" alt="User Image" class="img-fluid rounded-circle mb-3" style="max-width: 120px;">
+                    <h4 class="card-title text-white">User Login</h4>
+                    <p class="card-text text-white">Take quizzes, track progress, and enhance your skills.</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ url_for('login') }}" class="btn btn-custom btn-lg" style="display: inline-block; padding: 12px 25px; font-size: 18px; font-weight: bold; color: #6c63ff; background-color: white; border-radius: 30px; border: 1px solid #6c63ff; transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; margin-top: 15px;">User Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

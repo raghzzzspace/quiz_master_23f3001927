@@ -1,0 +1,59 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Register - Quizzy Quest{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5 mb-5"> <!-- Added mb-5 to create space below -->
+    <div class="col-lg-4 col-md-6 col-12">
+        <div class="card shadow-lg border-0 rounded-lg" style="background-color: #f4f7fc; border-radius: 1.2rem; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); max-width: 400px;">
+            <div class="card-body p-4" style="background: linear-gradient(135deg, #6f63ff, #3c3b6e); border-radius: 1.2rem;">
+                <h2 class="text-center mb-4" style="font-weight: 600; color: #ffffff;">Create an Account</h2>
+                <form action="{{ url_for('register') }}" method="POST">
+                    
+                    <!-- Username (Email) Field -->
+                    <div class="mb-4">
+                        <label for="email" class="form-label" style="color: #ffffff; font-weight: 500;">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email" style="border-radius: 0.8rem; font-size: 1rem; padding: 0.8rem; background-color: #f7f9fc; border: 1px solid #dcdcdc;">
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="mb-4">
+                        <label for="password" class="form-label" style="color: #ffffff; font-weight: 500;">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password" style="border-radius: 0.8rem; font-size: 1rem; padding: 0.8rem; background-color: #f7f9fc; border: 1px solid #dcdcdc;">
+                    </div>
+
+                    <!-- Full Name Field -->
+                    <div class="mb-4">
+                        <label for="full_name" class="form-label" style="color: #ffffff; font-weight: 500;">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required placeholder="Enter your full name" style="border-radius: 0.8rem; font-size: 1rem; padding: 0.8rem; background-color: #f7f9fc; border: 1px solid #dcdcdc;">
+                    </div>
+
+                    <!-- Qualification Field -->
+                    <div class="mb-4">
+                        <label for="qualification" class="form-label" style="color: #ffffff; font-weight: 500;">Qualification</label>
+                        <input type="text" class="form-control" id="qualification" name="qualification" required placeholder="Enter your qualification" style="border-radius: 0.8rem; font-size: 1rem; padding: 0.8rem; background-color: #f7f9fc; border: 1px solid #dcdcdc;">
+                    </div>
+
+                    <!-- Date of Birth Field -->
+                    <div class="mb-4">
+                        <label for="dob" class="form-label" style="color: #ffffff; font-weight: 500;">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob" name="dob" required style="border-radius: 0.8rem; font-size: 1rem; padding: 0.8rem; background-color: #f7f9fc; border: 1px solid #dcdcdc;">
+                    </div>
+
+                    <!-- Register Button -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <button type="submit" class="btn" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border: none; color: white; font-weight: 600; text-transform: uppercase; border-radius: 1rem; padding: 0.7rem 2.5rem; transition: background 0.3s ease-in-out;">Register</button>
+                    </div>
+                    
+                    <!-- Login Link -->
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ url_for('login') }}"  style="font-size: 1rem; color: white; font-weight: 500;">Already have an account? Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

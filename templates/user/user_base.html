@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}User Dashboard{% endblock %}</title>
+    <!-- Add any external stylesheets here, e.g., Bootstrap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <style>
+        /* Navbar Styling */
+        .navbar {
+            background: linear-gradient(135deg, #3c3b6e, #6f63ff); /* Gradient background */
+            padding: 10px 20px;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important; /* White color for nav items */
+            font-weight: 500;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #f7f7f7 !important; /* Slight hover effect */
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            max-width: 300px;
+            margin-right: 20px;
+        }
+
+        .welcome-msg {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #3c3b6e;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('first_page') }}">Quizzy Quest</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_dashboard') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('scores') }}">Scores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_summary') }}">Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('first_page') }}">Logout</a>
+                    </li>
+                    <!-- Search Button as a Link -->
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="{{ url_for('user_search') }}" role="button">Search</a>
+                    </li>
+                </ul>
+            </div>
+            <span class="welcome-msg ms-3">Welcome, Raghvi!</span> <!-- Display the user's name -->
+        </div>
+    </nav>
+
+    <!-- Main Content Section -->
+    <div class="container mt-4">
+        {% block content %}
+        <!-- Dynamic content will be loaded here -->
+        {% endblock %}
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>Developed by Raghvi Gupta</p>
+    </footer>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

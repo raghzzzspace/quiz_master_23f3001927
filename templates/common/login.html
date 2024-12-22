@@ -1,0 +1,102 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Login - Quizzy Quest{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .form-control:focus {
+        border-color: #3c3b6e; /* Border color change on focus */
+        box-shadow: 0 0 0 0.2rem rgba(60, 59, 110, 0.25); /* Focus shadow */
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(135deg, #2a2a59, #4e48e7); /* Darker gradient on hover */
+    }
+
+    .text-primary:hover {
+        text-decoration: underline; /* Underline effect for hover */
+    }
+
+    .card-container {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .card-body {
+        background: linear-gradient(135deg, #6f63ff, #3c3b6e);
+        border-radius: 1.2rem;
+        padding: 2rem;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    .form-control {
+        border-radius: 0.8rem;
+        background-color: #f7f9fc;
+        border: 1px solid #dcdcdc;
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    .btn-login {
+        background: #ffffff;
+        border: none;
+        color: darkslateblue;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 1rem;
+        padding: 0.7rem 2.5rem;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .btn-login:hover {
+        
+        box-shadow: 0 4px 12px rgba(1, 1, 1, 1); /* Added a subtle shadow for better visibility */
+    }
+    
+
+
+</style>
+
+<div class="row justify-content-center mt-5 mb-5 card-container">
+    <div class="col-lg-4 col-md-6 col-12">
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4" style="font-weight: 600; color: #ffffff;">Welcome!</h2>
+                <form action="/login" method="POST">
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email :</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password :</label>
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+                    
+                    <!-- Login Button -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <button type="submit" class="btn-login">Login</button>
+                    </div>
+                    
+                    <!-- Register Link -->
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ url_for('register') }}" style="font-size: 1rem; color: white; font-weight: 500;">Don't have an account? Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
