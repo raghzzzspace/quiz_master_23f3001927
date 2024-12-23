@@ -1,0 +1,117 @@
+{% extends 'user/user_base.html' %}
+
+{% block title %}Quiz - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Timer -->
+    <div class="d-flex justify-content-end mb-3">
+        <div id="timer" class="badge bg-danger text-white p-3" style="font-size: 22px; font-weight: bold; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); border-radius: 10px; background: linear-gradient(135deg, #7c4dff, #ff7043);">
+            00:30:00
+        </div>
+    </div>
+
+    <!-- Quiz Question Card -->
+    <div class="card shadow-lg border-0 rounded-lg" style="background-color: #f4f7fc; border-left: 4px solid #7c4dff;">
+        <div class="card-body p-5" style="background: linear-gradient(135deg, #7c4dff, #ff7043); border-radius: 10px;">
+            <h4 class="text-center mb-4" style="color: white; font-weight: 700; font-family: 'Poppins', sans-serif;">Quiz ID: 101</h4>
+            
+            <!-- Question -->
+            <div class="mb-4">
+                <h5 style="font-weight: 500; color: white; font-family: 'Roboto', sans-serif; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); font-size: 18px;">Question 1: What is the capital of France?</h5>
+            </div>
+
+            <!-- Options -->
+            <form id="quiz-form" action="{{ url_for('submit_answer', quiz_id=101, question_id=1) }}" method="post">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="answer" id="option1" value="1" style="border-color: #7c4dff;">
+                    <label class="form-check-label" for="option1" style="color: white; font-family: 'Roboto', sans-serif; font-size: 16px;">
+                        <span class="badge rounded-circle text-white" style="background-color: #6a2c8b; width: 30px; height: 30px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px;">A</span>
+                        Berlin
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="answer" id="option2" value="2" style="border-color: #7c4dff;">
+                    <label class="form-check-label" for="option2" style="color: white; font-family: 'Roboto', sans-serif; font-size: 16px;">
+                        <span class="badge rounded-circle text-white" style="background-color: #6a2c8b; width: 30px; height: 30px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px;">B</span>
+                        Madrid
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="answer" id="option3" value="3" style="border-color: #7c4dff;">
+                    <label class="form-check-label" for="option3" style="color: white; font-family: 'Roboto', sans-serif; font-size: 16px;">
+                        <span class="badge rounded-circle text-white" style="background-color: #6a2c8b; width: 30px; height: 30px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px;">C</span>
+                        Paris
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="answer" id="option4" value="4" style="border-color: #7c4dff;">
+                    <label class="form-check-label" for="option4" style="color: white; font-family: 'Roboto', sans-serif; font-size: 16px;">
+                        <span class="badge rounded-circle text-white" style="background-color: #6a2c8b; width: 30px; height: 30px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px;">D</span>
+                        Rome
+                    </label>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="d-flex justify-content-between mt-5">
+                    <button type="submit" name="action" value="previous" class="btn btn-custom px-5 py-3" style="border-radius: 30px; font-size: 16px;">
+                        Previous
+                    </button>
+                    <button type="submit" name="action" value="next" class="btn btn-custom px-5 py-3" style="border-radius: 30px; font-size: 16px;">
+                        Next
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Spacing -->
+    <div class="mt-5"></div> <!-- This is the spacing between the quiz and the footer -->
+</div>
+
+<!-- Timer Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let timerElement = document.getElementById("timer");
+        let timeLeft = 30 * 60; // 30 minutes in seconds
+
+        function updateTimer() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! The quiz will be submitted automatically.");
+                document.getElementById("quiz-form").submit();
+            }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+    });
+</script>
+
+<!-- Custom Styles -->
+<style>
+    /* Styling for the Previous and Next Buttons */
+    .btn-custom {
+        background-color: #6a2c8b; /* Darker purple background */
+        color: white; /* White text */
+        border-color: #6a2c8b; /* Darker purple border */
+        transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #5e1f7b; /* Even darker purple on hover */
+        border-color: #5e1f7b; /* Darker purple border */
+        color: white; /* Ensure the text stays white */
+        transform: scale(1.05); /* Slight scaling on hover */
+    }
+
+    .btn-custom:focus {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}

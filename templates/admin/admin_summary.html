@@ -1,0 +1,138 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Admin Summary - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-5" style="font-weight: 600; color: blue;">Admin Summary</h2>
+
+    <!-- Row for displaying the charts side by side with equal spacing and sizing -->
+    <div class="row justify-content-center">
+        <!-- Bar Chart for Top Scores by Subject -->
+        <div class="col-md-6 mb-4">
+            <canvas id="topScoresBarChart" height="400"></canvas>
+        </div>
+
+        <!-- Pie Chart for Subject-wise User Attempts -->
+        <div class="col-md-6 mb-4">
+            <canvas id="subjectAttemptsPieChart" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Get the context for the Bar Chart (Top Scores by Subject)
+    const ctxBar = document.getElementById('topScoresBarChart').getContext('2d');
+
+    // Create a gradient for the bars (same as in the user summary)
+    const gradient = ctxBar.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, '#6f63ff'); // Start with the admin brand color
+    gradient.addColorStop(1, '#3c3b6e'); // End with a darker shade
+
+    // Sample data for Top Scores by Subject (Bar Chart)
+    const topScoresData = {
+        labels: ['Math', 'Science', 'History', 'Geography', 'English'], // Replace with actual subjects
+        datasets: [{
+            label: 'Top Scores',
+            data: [95, 88, 92, 89, 90], // Replace with actual top scores for each subject
+            backgroundColor: gradient, // Apply the gradient
+            borderColor: '#4e4bdb', // Darker border
+            borderWidth: 1
+        }]
+    };
+
+    // Configuration for the Top Scores Bar Chart
+    const topScoresBarConfig = {
+        type: 'bar',
+        data: topScoresData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: 'Arial, sans-serif',
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `Top Score: ${tooltipItem.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            barThickness: 40, // Adjust thickness of bars
+            categoryPercentage: 0.75,
+            maintainAspectRatio: false
+        }
+    };
+
+    // Get the context for the Pie Chart (Subject-wise User Attempts)
+    const ctxPie = document.getElementById('subjectAttemptsPieChart').getContext('2d');
+
+    // Sample data for Subject-wise User Attempts (Pie Chart)
+    const subjectAttemptsData = {
+        labels: ['Math', 'Science', 'History', 'Geography', 'English'], // Replace with actual subjects
+        datasets: [{
+            label: 'User Attempts',
+            data: [1200, 950, 700, 400, 1100], // Replace with actual number of attempts per subject
+            backgroundColor: ['#3c3b6e', '#6f63ff', '#ff6f61', '#f7b731', '#48dbfb'], // Unique colors for each slice
+            hoverOffset: 4
+        }]
+    };
+
+    // Configuration for the Subject-wise User Attempts Pie Chart
+    const subjectAttemptsPieConfig = {
+        type: 'pie',
+        data: subjectAttemptsData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: 'Arial, sans-serif',
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `${tooltipItem.label}: ${tooltipItem.raw} attempts`;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Render the Bar Chart for Top Scores by Subject
+    const topScoresBarChart = new Chart(ctxBar, topScoresBarConfig);
+
+    // Render the Pie Chart for Subject-wise User Attempts
+    const subjectAttemptsPieChart = new Chart(ctxPie, subjectAttemptsPieConfig);
+</script>
+{% endblock %}

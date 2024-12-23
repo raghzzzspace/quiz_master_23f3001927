@@ -3,9 +3,21 @@ from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
 # Admin Routes
+@app.route('/admin/admin_base')
+def admin_base():
+    return render_template('admin/admin_base.html')
+
 @app.route('/admin/dashboard')
 def admin_dashboard():
     return render_template('admin/admin_dashboard.html')
+
+@app.route('/admin/admin_search')
+def admin_search():
+    return render_template('admin/admin_search.html')
+
+@app.route('/admin/admin_quiz')
+def admin_quiz():
+    return render_template('admin/admin_quiz.html')
 
 @app.route('/admin/summary')
 def admin_summary():
@@ -59,6 +71,10 @@ def quiz_result(quiz_id):
 def user_search():
     return render_template('user/user_search.html')
 
+@app.route('/user/submit_answer')
+def submit_answer():
+    return render_template('user/submit_answer.html')
+
 @app.route('/user/scores')
 def scores():
     return render_template('user/scores.html')
@@ -77,6 +93,10 @@ def login():
         # Handle login logic here
         return redirect(url_for('user_dashboard'))  # Redirect based on role
     return render_template('common/login.html')
+
+@app.route('/logout')
+def logout():
+    return redirect(url_for('first_page'))
 
 
 if __name__ == '__main__':

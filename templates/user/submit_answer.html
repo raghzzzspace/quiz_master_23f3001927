@@ -1,0 +1,76 @@
+{% extends 'user/user_base.html' %}
+
+{% block title %}Quiz - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Timer -->
+    <div class="d-flex justify-content-end mb-3">
+        <div id="timer" class="badge bg-danger text-white p-2" style="font-size: 16px; font-weight: bold;">
+            00:30:00
+        </div>
+    </div>
+
+    <!-- Quiz Question Card -->
+    <div class="card shadow-lg border-0 rounded-lg" style="background-color: #f8f9fc;">
+        <div class="card-body p-5">
+            <h4 class="text-center mb-4" style="color: #3c3b6e; font-weight: bold;">Quiz ID: {{ quiz_id }}</h4>
+            
+            <!-- Question -->
+            <div class="mb-4">
+                <h5 style="font-weight: 500; color: #3c3b6e;">Question {{ question_id }}: What is the capital of France?</h5>
+            </div>
+
+            <!-- Options -->
+            <form id="quiz-form" action="{{ url_for('submit_answer', quiz_id=quiz_id, question_id=question_id) }}" method="post">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option1" value="1">
+                    <label class="form-check-label" for="option1">A. Berlin</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option2" value="2">
+                    <label class="form-check-label" for="option2">B. Madrid</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option3" value="3">
+                    <label class="form-check-label" for="option3">C. Paris</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option4" value="4">
+                    <label class="form-check-label" for="option4">D. Rome</label>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" name="action" value="previous" class="btn btn-secondary px-4">Previous</button>
+                    <button type="submit" name="action" value="next" class="btn btn-primary px-4">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Timer Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let timerElement = document.getElementById("timer");
+        let timeLeft = 30 * 60; // 30 minutes in seconds
+
+        function updateTimer() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! The quiz will be submitted automatically.");
+                document.getElementById("quiz-form").submit();
+            }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+    });
+</script>
+{% endblock %}

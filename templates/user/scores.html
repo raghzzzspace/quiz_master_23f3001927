@@ -1,0 +1,48 @@
+{% extends 'user/user_base.html' %}
+
+{% block title %}Scores - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4" style="font-weight: 600; color: #3c3b6e;">Attempted Quizzes</h2>
+    
+    <!-- Table for displaying attempted quizzes -->
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white;">
+            <tr>
+                <th>ID</th>
+                <th>Number of Questions</th>
+                <th>Date</th>
+                <th>Duration (hh:mm)</th>
+                <th>Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-light">
+                <td>1</td>
+                <td>20</td>
+                <td>2024-12-15</td>
+                <td>00:30</td>
+                <td>18/20</td>
+                <td>
+                    <a href="{{ url_for('quiz_result', quiz_id=1) }}" class="btn btn-danger btn-sm" style="font-size: 12px;">View Result</a>
+                </td>
+            </tr>
+            <tr class="table-secondary">
+                <td>2</td>
+                <td>15</td>
+                <td>2024-12-10</td>
+                <td>00:45</td>
+                <td>12/15</td>
+                <td>
+                    <a href="{{ url_for('quiz_result', quiz_id=2) }}" class="btn btn-danger btn-sm" style="font-size: 12px;">View Result</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-center">No attempted quizzes available.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
