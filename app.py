@@ -1,6 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+from models import db, Admin, User, Subject, Chapter, Quiz, Questions, Scores
+from flask_migrate import Migrate
 
 app = Flask(__name__)
+
+# Configuration for the database
+app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///C:/Users/hp/Desktop/quiz_master_database.db"
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize the database
+db.init_app(app)
+m = Migrate(app,db)
+
+# Create the tables (Only needed on the first run)
+# with app.app_context():
+#     db.create_all()
 
 # Admin Routes
 @app.route('/admin/admin_base')
