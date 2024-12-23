@@ -10,21 +10,30 @@
     <!-- Search Form -->
     <form method="GET" action="{{ url_for('user_search') }}">
         <div class="row justify-content-center align-items-center">
-            <!-- Search By (Quiz ID or Date) -->
+            <!-- Search By (Quiz ID, Date, Subject, Chapter) -->
             <div class="col-md-3 mb-3">
                 <div class="mb-3">
                     <label for="searchBy" class="form-label" style="color: #004aad; font-weight: 500;">Search By:</label>
                     <select class="form-select" id="searchBy" name="searchBy" aria-label="Search By">
                         <option value="quiz_id">Quiz ID</option>
                         <option value="quiz_date">Quiz Date</option>
-                        <option value="quiz_id">Subject</option>
-                        <option value="quiz_date">Chapter</option>
+                        <option value="subject">Subject</option>
+                        <option value="chapter">Chapter</option>
                     </select>
                 </div>
             </div>
+
+            <!-- Search Query Input -->
+            <div class="col-md-3 mb-3">
+                <div class="mb-3">
+                    <label for="searchQuery" class="form-label" style="color: #004aad; font-weight: 500;">Enter Search Query:</label>
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search..." required>
+                </div>
+            </div>
+
             <!-- Search Button -->
             <div class="col-md-2 d-flex align-items-center">
-                <button type="submit" class="btn" style="background-color: #004aad; color: white; border: none; height: 40px; width: 100%; font-weight: 600;">
+                <button type="submit" class="btn" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; border: none; height: 40px; width: 100%; font-weight: 600;">
                     Search
                 </button>
             </div>
@@ -35,12 +44,14 @@
     <h3 class="text-center mb-3" style="color: #004aad; font-weight: 600;">
         {% if search_by == 'quiz_id' %} Quiz ID Search Results
         {% elif search_by == 'quiz_date' %} Quiz Date Search Results
+        {% elif search_by == 'subject' %} Subject Search Results
+        {% elif search_by == 'chapter' %} Chapter Search Results
         {% else %} Search Results {% endif %}
     </h3>
 
     {% if search_results %}
     <table class="table table-striped table-hover shadow rounded">
-        <thead style="background-color: #d9eaf7; color: #084298;">
+        <thead style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white;">
             <tr>
                 <th>ID</th>
                 <th>Quiz Name</th>
@@ -50,14 +61,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for quiz in search_results %}
-            <tr style="background-color: #f9f9f9; color: #333;">
-                <td><a href="#" style="color: #004aad;">{{ quiz.id }}</a></td>
-                <td>{{ quiz.name }}</td>
-                <td>{{ quiz.subject }}</td>
-                <td>{{ quiz.date }}</td>
+            {% for quiz, subject in search_results %}
+            <tr style="background: white;">
+                <td><a href="#" style="color: #004aad;">{{ quiz.quiz_id }}</a></td>
+                <td>{{ quiz.remarks }}</td>  <!-- Assuming quiz name is stored in remarks -->
+                <td>{{ subject.subj_name }}</td>  <!-- Accessing the subject name from the joined subject -->
+                <td>{{ quiz.date_of_quiz }}</td>
                 <td>
-                    <a href="{{ url_for('user.view_quiz', quiz_id=quiz.id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="#" class="btn btn-info btn-sm" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border: none;">View</a>
                 </td>
             </tr>
             {% endfor %}

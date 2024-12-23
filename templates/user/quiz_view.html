@@ -1,0 +1,45 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}Quiz Details - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container-fluid mb-5">
+    <!-- Quiz Details Card -->
+    <div class="card shadow-lg rounded" style="border: 1px solid #e3e6f0; background: linear-gradient(135deg, #3c3b6e, #6f63ff);">
+        <div class="card-body">
+            <h3 class="text-center mb-4" style="color: #ffffff; font-weight: 600;">Quiz Details</h3>
+            
+            <!-- Quiz Info -->
+            <div class="row mb-4" style="background: linear-gradient(135deg, #6c8ebf, #a1c3e7); border-radius: 8px; padding: 15px;">
+                <div class="col-md-6 mb-3">
+                    <p><strong style="color: #ffffff;">Quiz ID:</strong> <span style="color: #f0f0f0;">{{ quiz.quiz_id }}</span></p>
+                    <p><strong style="color: #ffffff;">Subject:</strong> <span style="color: #f0f0f0;">{{ subject.subj_name }}</span></p>
+                    <p><strong style="color: #ffffff;">Chapter:</strong> <span style="color: #f0f0f0;">{{ chapter.ch_name }}</span></p>
+                    <p><strong style="color: #ffffff;">Number of Questions:</strong> <span style="color: #f0f0f0;">{{ num_questions }}</span></p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong style="color: #ffffff;">Scheduled Date:</strong> <span style="color: #f0f0f0;">{{ quiz.date_of_quiz.strftime('%B %d, %Y') }}</span></p>
+                    <p><strong style="color: #ffffff;">Duration:</strong> <span style="color: #f0f0f0;">{{ quiz.time_duration }}</span></p>
+                </div>
+            </div>
+            
+            <!-- Questions List -->
+            <h4 class="text-center mt-4 mb-3" style="color: #ffffff; font-weight: 600;">Questions</h4>
+            <div class="list-group">
+                {% for question in questions %}
+                <div class="list-group-item mb-3" style="background: linear-gradient(135deg, #f0f0f0, #d3e1f1); border: 1px solid #dbe2eb; border-radius: 8px; padding: 15px;">
+                    <p><strong style="color: #004aad;">Q{{ loop.index }}:</strong> <span style="color: #333;">{{ question.q_title }}</span></p>
+                    <p><strong style="color: #004aad;">Options:</strong></p>
+                    <ul style="padding-left: 20px;">
+                        <li style="color: #333;">{{ question.option1 }}</li>
+                        <li style="color: #333;">{{ question.option2 }}</li>
+                        <li style="color: #333;">{{ question.option3 }}</li>
+                        <li style="color: #333;">{{ question.option4 }}</li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

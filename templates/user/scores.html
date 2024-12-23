@@ -19,29 +19,24 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-light">
-                <td>1</td>
-                <td>20</td>
-                <td>2024-12-15</td>
-                <td>00:30</td>
-                <td>18/20</td>
-                <td>
-                    <a href="{{ url_for('quiz_result', quiz_id=1) }}" class="btn btn-danger btn-sm" style="font-size: 12px;">View Result</a>
-                </td>
-            </tr>
-            <tr class="table-secondary">
-                <td>2</td>
-                <td>15</td>
-                <td>2024-12-10</td>
-                <td>00:45</td>
-                <td>12/15</td>
-                <td>
-                    <a href="{{ url_for('quiz_result', quiz_id=2) }}" class="btn btn-danger btn-sm" style="font-size: 12px;">View Result</a>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6" class="text-center">No attempted quizzes available.</td>
-            </tr>
+            {% if quizzes %}
+                {% for quiz in quizzes %}
+                <tr class="table-light">
+                    <td>{{ quiz.quiz_id }}</td>
+                    <td>{{ quiz.num_questions }}</td>
+                    <td>{{ quiz.quiz_date }}</td>
+                    <td>{{ quiz.duration }}</td>
+                    <td>{{ quiz.score }} / {{ quiz.total_score }}</td>
+                    <td>
+                        <a href="{{ quiz.action_url }}" class="btn btn-danger btn-sm" style="font-size: 12px;">View Result</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No attempted quizzes available.</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

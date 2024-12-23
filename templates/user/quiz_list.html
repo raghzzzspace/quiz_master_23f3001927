@@ -4,6 +4,13 @@
 
 {% block content %}
 <div class="container mt-4">
+    <!-- Welcome message below the navbar, aligned to the left -->
+    <div class="row">
+        <div class="col-12">
+            <h4 class="welcome-msg" style="font-weight: 500; color: #3c3b6e;">Welcome, {{ fullname }}!</h4>
+        </div>
+    </div>
+    
     <h2 class="text-center mb-4" style="font-weight: 600; color: #3c3b6e;">Upcoming Quizzes</h2>
     
     <!-- Table for displaying upcoming quizzes -->
@@ -11,46 +18,31 @@
         <thead class="thead-dark" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white;">
             <tr>
                 <th>ID</th>
-                <th>Number of Questions</th>
+                <th>Subject</th>
+                <th>Chapter</th>
                 <th>Date</th>
-                <th>Duration (hh:mm)</th>
+                <th>Duration</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
+            {% for quiz, subject, chapter in quizzes %}
             <tr class="table-light">
-                <td>1</td>
-                <td>20</td>
-                <td>2024-12-25</td>
-                <td>00:30</td>
+                <td>{{ quiz.quiz_id }}</td>
+                <td>{{ subject.subj_name }}</td>
+                <td>{{ chapter.ch_name }}</td>
+                <td>{{ quiz.date_of_quiz }}</td>
+                <td>{{ quiz.time_duration }}</td>
                 <td>
-                    <a href="{{ url_for('quiz', quiz_id=1) }}" class="btn btn-info btn-sm">View</a>
-                    <a href="{{ url_for('quiz', quiz_id=1) }}" class="btn btn-success btn-sm">Start</a>
+                    <a href="{{ url_for('quiz_view', quiz_id=quiz.quiz_id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ url_for('quiz', quiz_id=quiz.quiz_id, question_id=1) }}" class="btn btn-success btn-sm">Start</a>
                 </td>
             </tr>
-            <tr class="table-secondary">
-                <td>2</td>
-                <td>15</td>
-                <td>2024-12-30</td>
-                <td>00:45</td>
-                <td>
-                    <a href="{{ url_for('quiz', quiz_id=2) }}" class="btn btn-info btn-sm">View</a>
-                    <a href="{{ url_for('quiz', quiz_id=2) }}" class="btn btn-success btn-sm">Start</a>
-                </td>
-            </tr>
-            <tr class="table-light">
-                <td>3</td>
-                <td>25</td>
-                <td>2025-01-05</td>
-                <td>01:00</td>
-                <td>
-                    <a href="{{ url_for('quiz', quiz_id=3) }}" class="btn btn-info btn-sm">View</a>
-                    <a href="{{ url_for('quiz', quiz_id=3) }}" class="btn btn-success btn-sm">Start</a>
-                </td>
-            </tr>
+            {% else %}
             <tr>
-                <td colspan="5" class="text-center">No upcoming quizzes available.</td>
+                <td colspan="6" class="text-center">No upcoming quizzes available.</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

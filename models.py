@@ -56,7 +56,7 @@ class Questions(db.Model):
     option2 = db.Column(db.String(255), nullable=False)
     option3 = db.Column(db.String(255), nullable=False)
     option4 = db.Column(db.String(255), nullable=False)
-    correctoption = db.Column(db.Integer, nullable=False)  # 1, 2, 3, or 4
+    correctoption = db.Column(db.String(255), nullable=False)
 
 # Scores Table
 class Scores(db.Model):
@@ -67,3 +67,14 @@ class Scores(db.Model):
     time_stamp_of_attempt = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     scored = db.Column(db.Integer, nullable=False)
     total_score = db.Column(db.Integer, nullable=False)
+
+
+# UserAnswers Table
+class UserAnswers(db.Model):
+    __tablename__ = 'user_answers'
+    answer_id = db.Column(db.Integer, primary_key=True)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.quiz_id'), nullable=False)
+    user_email = db.Column(db.String(120), db.ForeignKey('user.user_email'), nullable=False)
+    q_id = db.Column(db.Integer, db.ForeignKey('questions.q_id'), nullable=False)
+    chosen_option = db.Column(db.String(255), nullable=False) 
+    time_stamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

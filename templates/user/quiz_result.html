@@ -9,7 +9,7 @@
     <!-- Quiz Details Card -->
     <div class="card shadow-lg border-0 rounded-lg" style="background-color: #f8f9fc; max-width: 600px; margin: 0 auto;">
         <div class="card-body p-4">
-            <h4 class="text-center mb-4" style="color: #3c3b6e; font-weight: bold;">Results for Quiz ID: 101</h4>
+            <h4 class="text-center mb-4" style="color: #3c3b6e; font-weight: bold;">Results for Quiz ID: {{ quiz_id }}</h4>
             
             <!-- Result Table -->
             <table class="table table-bordered">
@@ -22,27 +22,27 @@
                 <tbody>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Quiz ID</td>
-                        <td style="text-align: center; background-color: #ffffff;">101</td>
+                        <td style="text-align: center; background-color: #ffffff;">{{ quiz_id }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Total Questions</td>
-                        <td style="text-align: center; background-color: #ffffff;">20</td>
+                        <td style="text-align: center; background-color: #ffffff;">{{ total_questions }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Correct Answers</td>
-                        <td style="text-align: center; color: green; font-weight: bold; background-color: #ffffff;">15</td>
+                        <td style="text-align: center; color: green; font-weight: bold; background-color: #ffffff;">{{ correct_answers }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Incorrect Answers</td>
-                        <td style="text-align: center; color: red; font-weight: bold; background-color: #ffffff;">5</td>
+                        <td style="text-align: center; color: red; font-weight: bold; background-color: #ffffff;">{{ incorrect_answers }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Score</td>
-                        <td style="text-align: center; font-weight: bold; background-color: #ffffff;">15/20</td>
+                        <td style="text-align: center; font-weight: bold; background-color: #ffffff;">{{ score }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 500; background-color: #e8f0fe;">Percentage</td>
-                        <td style="text-align: center; font-weight: bold; color: #4e73df; background-color: #ffffff;">75.00%</td>
+                        <td style="text-align: center; font-weight: bold; color: #4e73df; background-color: #ffffff;">{{ percentage }}%</td>
                     </tr>
                 </tbody>
             </table>
