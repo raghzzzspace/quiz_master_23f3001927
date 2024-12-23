@@ -3,8 +3,12 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from models import db, Admin, User, Subject, Chapter, Quiz, Questions, Scores
 from flask_migrate import Migrate
+from flask import session, flash
+from datetime import datetime
+import secrets
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
 # Configuration for the database
 app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///C:/Users/hp/Desktop/quiz_master_database.db"
@@ -57,18 +61,47 @@ def manage_questions():
     return render_template('admin/manage_questions.html')
 
 # User Routes
+
 @app.route('/user/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Handle user registration logic here
-        return redirect(url_for('login'))
+        existing_user = User.query.filter_by(user_email=request.form['email']).first()
+        
+        if existing_user:
+            flash('User already exists!', 'danger')
+            return redirect(url_for('register'))
+        
+        email = request.form['email']
+        password = request.form['password']
+        fullname = request.form['fullname']
+        qualification = request.form['qualification']
+        
+        try:
+            dob = datetime.strptime(request.form['dob'], '%Y-%m-%d')
+        except ValueError:
+            flash('Invalid date of birth format. Use dd-mm-yyyy.', 'danger')
+            return redirect(url_for('register'))
+
+        user = User(
+            user_email=email, 
+            user_password=generate_password_hash(password), 
+            fullname=fullname, 
+            qualification=qualification, 
+            dob=dob
+        )
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        flash('User registered successfully!', 'success')
+
+        return redirect(url_for('register'))
+    
     return render_template('user/register.html')
+
 @app.route('/user/user_base')
 def user_base():
     return render_template('user/user_base.html')
-@app.route('/user/dashboard')
-def user_dashboard():
-    return render_template('user/user_dashboard.html')
 
 @app.route('/user/quiz-list')
 def quiz_list():
@@ -107,13 +140,31 @@ def first_page():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Handle login logic here
-        return redirect(url_for('user_dashboard'))  # Redirect based on role
+        email = request.form['email']
+        password = request.form['password']
+        
+        user = User.query.filter_by(user_email=email).first()
+        if user and check_password_hash(user.user_password, password):
+            session['user_email'] = user.user_email
+            flash(f'Welcome back, {user.fullname}!', 'success')
+            return redirect(url_for('quiz_list'))
+
+        admin = Admin.query.filter_by(email=email).first()
+        if admin and check_password_hash(admin.password, password):
+            session['admin_email'] = admin.email
+            flash(f'Welcome back, {admin.email}!', 'success')
+            return redirect(url_for('admin_dashboard'))
+
+        flash('Invalid credentials. Please try again.', 'danger')
+        return redirect(url_for('login'))
+
     return render_template('common/login.html')
 
 @app.route('/logout')
 def logout():
-    return redirect(url_for('first_page'))
+    session.clear()
+    flash('You have been logged out successfully.', 'success')
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
