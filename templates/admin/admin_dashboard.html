@@ -4,189 +4,35 @@
 
 {% block content %}
 <div class="container-fluid mb-5">
-    <h3 class="text-center mb-4" style="color: blue; font-weight: 600;">Dashboard</h3>
+    <h3 class="text-center mb-4" style="color: #003366; font-weight: 600;">Dashboard</h3>
 
-    <!-- Row for Subjects -->
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert-container mb-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Loop through each subject and its chapters -->
     <div class="row">
-
-        <!-- Subject 1 - Mathematics -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff);; color: white; font-weight: 600;">
-                    Mathematics
-                </div>
-                <div class="card-body">
-                    <!-- Table of Chapters -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #d0e6f8); color: #004a99;">
-                            <tr>
-                                <th>Chapter Name</th>
-                                <th>Number of Questions</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Algebra</td>
-                                <td>15</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Geometry</td>
-                                <td>12</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Calculus</td>
-                                <td>20</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Chapter -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff);; border-color: #003366;">Add Chapter</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subject 2 - Science -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff);; color: white; font-weight: 600;">
-                    Science
-                </div>
-                <div class="card-body">
-                    <!-- Table of Chapters -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #d0e6f8); color: #004a99;">
-                            <tr>
-                                <th>Chapter Name</th>
-                                <th>Number of Questions</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Physics</td>
-                                <td>18</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Chemistry</td>
-                                <td>14</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Biology</td>
-                                <td>22</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Chapter -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff);; border-color: #003366;">Add Chapter</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Row for More Subjects -->
-    <div class="row">
-
-        <!-- Subject 3 - History -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff);; color: white; font-weight: 600;">
-                    History
-                </div>
-                <div class="card-body">
-                    <!-- Table of Chapters -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #d0e6f8); color: #004a99;">
-                            <tr>
-                                <th>Chapter Name</th>
-                                <th>Number of Questions</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Ancient History</td>
-                                <td>10</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Medieval History</td>
-                                <td>13</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Modern History</td>
-                                <td>25</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Chapter -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Add Chapter</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subject 4 - Geography -->
+        {% for subject in subject_data %}
         <div class="col-md-6 mb-4">
             <div class="card shadow-lg border-light">
                 <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-                    Geography
+                    {{ subject.subj_name }}
                 </div>
                 <div class="card-body">
                     <!-- Table of Chapters -->
+                    {% if subject.chapters %}
                     <table class="table table-striped table-hover">
                         <thead style="background: linear-gradient(45deg, #e6f1ff, #d0e6f8); color: #004a99;">
                             <tr>
@@ -196,50 +42,46 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for chapter in subject.chapters %}
                             <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>Physical Geography</td>
-                                <td>8</td>
+                                <td>{{ chapter.ch_name }}</td>
+                                <td>{{ chapter.num_questions }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
+                                        <!-- Edit Chapter Link -->
+                                        <a href="{{ url_for('edit_chapter', subject_id=subject.subj_id, chapter_id=chapter.ch_id) }}" class="btn btn-info btn-sm mr-2" style="flex: 1; background-color: #17a2b8; border-color: #138496; color: white;">Edit</a>
+                                        
+                                        <!-- Delete Chapter Form -->
+                                        <form action="{{ url_for('delete_chapter', subject_id=subject.subj_id, chapter_id=chapter.ch_id) }}" method="POST" style="flex: 1;">
+                                            <button type="submit" class="btn btn-danger btn-sm" style="width: 100%; background-color: #dc3545; border-color: #c82333; color: white;">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Human Geography</td>
-                                <td>10</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d0e6f8);">
-                                <td>World Geography</td>
-                                <td>12</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
+                    {% else %}
+                        <p>No chapters available for this subject.</p>
+                    {% endif %}
+                    
                     <!-- Button to Add New Chapter -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Add Chapter</a>
+                    <a href="{{ url_for('add_chapter', subject_id=subject.subj_id) }}" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Add Chapter</a>
                 </div>
             </div>
         </div>
-
+        {% endfor %}
     </div>
 
     <!-- Button to Add Subject -->
     <div class="text-center mt-4">
-        <a href="#" class="btn btn-primary btn-lg" style="background-color: #004a99; border-color: #003366;">Add Subject</a>
+        <a href="{{ url_for('add_subject') }}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Add Subject</a>
     </div>
 
 </div>
+
+<!-- Include jQuery and Bootstrap JS for the flash message close functionality -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 {% endblock %}

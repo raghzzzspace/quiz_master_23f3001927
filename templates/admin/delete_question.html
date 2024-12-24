@@ -1,0 +1,16 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Delete Question - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container-fluid mb-5">
+    <h3 class="text-center mb-4" style="color: red; font-weight: 600;">Delete Question</h3>
+    
+    <p class="text-center">Are you sure you want to delete the question: <strong>{{ question.q_title }}</strong>?</p>
+    
+    <form method="POST" class="text-center">
+        <button type="submit" class="btn btn-danger btn-lg" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">Yes, Delete</button>
+        <a href="{{ url_for('admin_quiz', quiz_id=quiz_id) }}" class="btn btn-secondary btn-lg">Cancel</a>
+    </form>
+</div>
+{% endblock %}

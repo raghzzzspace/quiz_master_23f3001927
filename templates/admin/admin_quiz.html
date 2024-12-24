@@ -6,14 +6,29 @@
 <div class="container-fluid mb-5">
     <h3 class="text-center mb-4" style="color: blue; font-weight: 600;">Quiz Management</h3>
 
-    <!-- Row for Quizzes -->
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Loop through the quizzes -->
     <div class="row">
-
-        <!-- Quiz 1 - Mathematics -->
+        {% for quiz in quizzes %}
         <div class="col-md-6 mb-4">
             <div class="card shadow-lg border-light">
                 <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-                    Quiz ID - Mathematics
+                    Quiz ID - {{ quiz.quiz_id }} - {{ quiz.subject_name }}
                 </div>
                 <div class="card-body">
                     <!-- Table of Questions -->
@@ -26,219 +41,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q1</td>
-                                <td>What is 2+2?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Q2</td>
-                                <td>What is the square root of 16?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q3</td>
-                                <td>What is the derivative of x²?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% if quiz.questions %}
+                                {% for question in quiz.questions %}
+                                <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
+                                    <td>{{ question.q_id }}</td>
+                                    <td>{{ question.q_title }}</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a href="{{ url_for('admin_edit_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
+                                            <a href="{{ url_for('admin_delete_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No questions available for this quiz</td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
+
                     <!-- Button to Add New Question -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
+                    <a href="{{ url_for('admin_add_question', quiz_id=quiz.quiz_id) }}" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
                 </div>
             </div>
         </div>
-
-        <!-- Quiz 2 - Science -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-                    Quiz ID - Science
-                </div>
-                <div class="card-body">
-                    <!-- Table of Questions -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #c2daf9); color: #004a99;">
-                            <tr>
-                                <th>Question ID</th>
-                                <th>Question Title</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q1</td>
-                                <td>What is the chemical symbol for water?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Q2</td>
-                                <td>What is the force of gravity on Earth?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q3</td>
-                                <td>What is the pH level of water?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Question -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Row for More Quizzes -->
-    <div class="row">
-
-        <!-- Quiz 3 - History -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-                    Quiz ID - History
-                </div>
-                <div class="card-body">
-                    <!-- Table of Questions -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #c2daf9); color: #004a99;">
-                            <tr>
-                                <th>Question ID</th>
-                                <th>Question Title</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q1</td>
-                                <td>When was the Declaration of Independence signed?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Q2</td>
-                                <td>Who was the first President of the United States?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q3</td>
-                                <td>What year did World War II end?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Question -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quiz 4 - Geography -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-lg border-light">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-                    Quiz ID - Geography
-                </div>
-                <div class="card-body">
-                    <!-- Table of Questions -->
-                    <table class="table table-striped table-hover">
-                        <thead style="background: linear-gradient(45deg, #e6f1ff, #c2daf9); color: #004a99;">
-                            <tr>
-                                <th>Question ID</th>
-                                <th>Question Title</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q1</td>
-                                <td>What is the capital of France?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ffffff, #f1faff);">
-                                <td>Q2</td>
-                                <td>What is the largest desert in the world?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #e6f1ff, #d2e8f7);">
-                                <td>Q3</td>
-                                <td>Which continent is Australia part of?</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="#" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to Add New Question -->
-                    <a href="#" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
-                </div>
-            </div>
-        </div>
-
+        {% endfor %}
     </div>
 
     <!-- Button to Add Quiz -->
     <div class="text-center mt-4">
-        <a href="#" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</a>
+        <a href="{{ url_for('admin_add_quiz') }}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</a>
     </div>
 
 </div>

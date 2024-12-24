@@ -1,0 +1,45 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Add Chapter - Quizzy Quest{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h3 class="text-center mb-4" style="color: #003366; font-weight: 600;">Add New Chapter for {{ subject.subj_name }}</h3>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert-container mb-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="card shadow-lg border-light">
+        <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
+            Add Chapter Details
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('add_chapter', subject_id=subject.subj_id) }}">
+                <div class="form-group">
+                    <label for="ch_name" style="font-weight: 500;">Chapter Name</label>
+                    <input type="text" class="form-control" id="ch_name" name="ch_name" placeholder="Enter chapter name" required>
+                </div>
+                <div class="form-group">
+                    <label for="ch_desc" style="font-weight: 500;">Chapter Description</label>
+                    <textarea class="form-control" id="ch_desc" name="ch_desc" rows="3" placeholder="Enter chapter description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Add Chapter</button>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary btn-lg ml-3" style="background: linear-gradient(135deg, #cccccc, #999999); border-color: #777;">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
