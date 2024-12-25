@@ -48,8 +48,8 @@
                                     <td>{{ question.q_title }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            <a href="{{ url_for('admin_edit_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
-                                            <a href="{{ url_for('admin_delete_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
+                                            <a href="{{ url_for('edit_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-info btn-sm mr-2" style="flex: 1;">Edit</a>
+                                            <a href="{{ url_for('delete_question', quiz_id=quiz.quiz_id, question_id=question.q_id) }}" class="btn btn-danger btn-sm" style="flex: 1;">Delete</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -63,7 +63,7 @@
                     </table>
 
                     <!-- Button to Add New Question -->
-                    <a href="{{ url_for('admin_add_question', quiz_id=quiz.quiz_id) }}" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
+                    <a href="{{ url_for('add_question', quiz_id=quiz.quiz_id) }}" class="btn btn-primary btn-block mt-3" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Question</a>
                 </div>
             </div>
         </div>
@@ -72,8 +72,13 @@
 
     <!-- Button to Add Quiz -->
     <div class="text-center mt-4">
-        <a href="{{ url_for('admin_add_quiz') }}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</a>
+        <a href="{{ url_for('add_quiz') }}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</a>
     </div>
 
 </div>
+
+<!-- Ensure Bootstrap's JavaScript is loaded for alert dismissal -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 {% endblock %}

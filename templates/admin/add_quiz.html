@@ -9,10 +9,18 @@
     <form method="POST">
         <div class="form-group">
             <label for="subj_id">Select Subject</label>
-            <select class="form-control" id="subj_id" name="subj_id">
+            <select class="form-control" id="subj_id" name="subj_id" required onchange="fetchChapters(this.value)">
+                <option value="" disabled selected>Select a subject</option>
                 {% for subject in subjects %}
                     <option value="{{ subject.subj_id }}">{{ subject.subj_name }}</option>
                 {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ch_id">Select Chapter</label>
+            <select class="form-control" id="ch_id" name="ch_id" required>
+                <option value="" disabled selected>Select a chapter</option>
+                <!-- Chapters will be dynamically populated based on the selected subject -->
             </select>
         </div>
         <div class="form-group">
@@ -20,14 +28,33 @@
             <input type="date" class="form-control" id="date_of_quiz" name="date_of_quiz" required>
         </div>
         <div class="form-group">
-            <label for="time_duration">Time Duration</label>
-            <input type="text" class="form-control" id="time_duration" name="time_duration" required>
+            <label for="time_duration">Time Duration (e.g., 05:00)</label>
+            <input type="text" class="form-control" id="time_duration" name="time_duration" placeholder="Enter duration in HH:MM format" required>
         </div>
         <div class="form-group">
             <label for="remarks">Remarks</label>
-            <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+            <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter any additional details"></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</button>
     </form>
 </div>
+
+<script>
+    function fetchChapters(subjectId) {
+        fetch(`/admin/get_chapters/${subjectId}`)
+            .then(response => response.json())
+            .then(data => {
+                const chapterSelect = document.getElementById('ch_id');
+                chapterSelect.innerHTML = '<option value="" disabled selected>Select a chapter</option>';
+                data.chapters.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter.ch_id;
+                    option.textContent = chapter.ch_name;
+                    chapterSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching chapters:', error));
+    }
+</script>
+
 {% endblock %}

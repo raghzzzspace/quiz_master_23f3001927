@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from models import db, Admin, User, Subject, Chapter, Quiz, Questions, Scores, UserAnswers
@@ -95,7 +95,6 @@ def admin_quiz():
     return render_template('admin/admin_quiz.html', quizzes=quizzes_data)
 
 
-
 @app.route('/admin/summary')
 def admin_summary():
     return render_template('admin/admin_summary.html')
@@ -173,8 +172,10 @@ def add_subject():
 
 @app.route('/admin/edit_question/<int:quiz_id>/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(quiz_id, question_id):
-    question = Questions.query.get_or_404(question_id)
-    
+    question= Questions.query.filter_by(quiz_id=quiz_id, q_id=question_id).first()
+    if not question:
+        flash('Question not found.', 'warning')
+        return redirect(url_for('admin_quiz'))
     if request.method == 'POST':
         question.q_title = request.form['q_title']
         question.option1 = request.form['option1']
@@ -182,21 +183,27 @@ def edit_question(quiz_id, question_id):
         question.option3 = request.form['option3']
         question.option4 = request.form['option4']
         question.correctoption = request.form['correctoption']
-        
         db.session.commit()
         flash('Question updated successfully!', 'success')
-        return redirect(url_for('admin_quiz', quiz_id=quiz_id))
-    
-    return render_template('admin/edit_question.html', question=question, quiz_id=quiz_id)
+        return redirect(url_for('admin_quiz'))
+    return render_template('admin/edit_question.html', question=question)
 
-@app.route('/admin/delete_question/<int:quiz_id>/<int:question_id>', methods=['POST'])
+@app.route('/admin/delete_question/<int:quiz_id>/<int:question_id>', methods=['GET', 'POST'])
 def delete_question(quiz_id, question_id):
-    question = Questions.query.get_or_404(question_id)
-    db.session.delete(question)
-    db.session.commit()
+    question = Questions.query.filter_by(quiz_id=quiz_id, q_id=question_id).first()
     
-    flash('Question deleted successfully!', 'danger')
-    return redirect(url_for('admin_quiz', quiz_id=quiz_id))
+    if request.method == 'POST':
+        if question:
+            db.session.delete(question)
+            db.session.commit()
+            flash('Question deleted successfully!', 'danger')
+            return redirect(url_for('admin_quiz', quiz_id=quiz_id))
+        else:
+            flash('Question not found.', 'warning')
+            return redirect(url_for('admin_quiz', quiz_id=quiz_id))
+
+    return render_template('admin/delete_question.html', question=question, quiz_id=quiz_id)
+
 
 @app.route('/admin/add_question/<int:quiz_id>', methods=['GET', 'POST'])
 def add_question(quiz_id):
@@ -226,23 +233,53 @@ def add_question(quiz_id):
 @app.route('/admin/add_quiz', methods=['GET', 'POST'])
 def add_quiz():
     if request.method == 'POST':
+        # Fetch data from the form
+        ch_id = request.form.get('ch_id')  # Chapter ID
+        subj_id = request.form.get('subj_id')  # Subject ID
+        date_of_quiz = request.form.get('date_of_quiz')
+        time_duration = request.form.get('time_duration')
+        remarks = request.form.get('remarks')
+
+        # Validate input fields
+        if not ch_id or not subj_id:
+            flash('Please select a subject and chapter!', 'danger')
+            return redirect(url_for('add_quiz'))
+        
+        if not date_of_quiz or not time_duration:
+            flash('Please fill all required fields!', 'danger')
+            return redirect(url_for('add_quiz'))
+
+        # Create a new quiz instance
         new_quiz = Quiz(
-            subj_id=request.form['subj_id'],
-            date_of_quiz=datetime.strptime(request.form['date_of_quiz'], '%Y-%m-%d'),
-            time_duration=request.form['time_duration'],
-            remarks=request.form['remarks']
+            ch_id=ch_id,
+            subj_id=subj_id,
+            date_of_quiz=datetime.strptime(date_of_quiz, '%Y-%m-%d'),
+            time_duration=time_duration,
+            remarks=remarks
         )
-        
-        db.session.add(new_quiz)
-        db.session.commit()
-        
-        flash('Quiz added successfully!', 'success')
-        return redirect(url_for('admin_quiz'))
+
+        # Add and commit the new quiz to the database
+        try:
+            db.session.add(new_quiz)
+            db.session.commit()
+            flash('Quiz added successfully!', 'success')
+            return redirect(url_for('admin_quiz'))
+        except Exception as e:
+            db.session.rollback()
+            flash('An error occurred while adding the quiz. Please try again.', 'danger')
+            print(f"Error: {e}")
+            return redirect(url_for('add_quiz'))
     
-    subjects = Subject.query.all()  # Fetch all subjects
+    # Fetch all subjects for the dropdown
+    subjects = Subject.query.all()
     return render_template('admin/add_quiz.html', subjects=subjects)
 
-
+@app.route('/admin/get_chapters/<int:subj_id>', methods=['GET'])
+def get_chapters(subj_id):
+    # Fetch chapters for the selected subject
+    chapters = Chapter.query.filter_by(subj_id=subj_id).all()
+    chapter_list = [{'ch_id': chapter.ch_id, 'ch_name': chapter.ch_name} for chapter in chapters]
+    return jsonify({'chapters': chapter_list})
 
 
 # User Routes
