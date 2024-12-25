@@ -84,26 +84,32 @@
 
 <!-- Timer Script -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         let timerElement = document.getElementById("timer");
-        let totalTime = {{ remaining_time }};  // Get the remaining time from the backend
-
+        let totalTime = {{ remaining_time }}; // Remaining time from the backend
+    
         function updateTimer() {
             const minutes = Math.floor(totalTime / 60);
             const seconds = totalTime % 60;
-            timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    
+            if (totalTime >= 0) {
+                timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+    
             totalTime--;
-
+    
             if (totalTime < 0) {
                 clearInterval(timerInterval);
-                alert("Time's up! The quiz will be submitted automatically.");
+                // Immediately submit the form
                 document.getElementById("quiz-form").submit();
             }
         }
-
-        const timerInterval = setInterval(updateTimer, 1000);
+    
+        // Start the timer immediately
         updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
     });
+    
 </script>
 
 <!-- Custom Styles -->

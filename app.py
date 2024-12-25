@@ -7,22 +7,147 @@ from flask import session, flash
 from datetime import datetime
 from sqlalchemy import func
 import secrets
+import os
 
+
+# Initialize the Flask app and database
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
-# Configuration for the database
-app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///C:/Users/hp/Desktop/quiz_master_database.db"
+# Use Vercel's temp directory or fallback to '/tmp' for other environments
+tmp_dir = os.getenv('VERCEL_TEMP', '/tmp')
 
+# Configuration for the database
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{tmp_dir}/quiz_master_database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# # Initialize the database
+# Initialize the database
 db.init_app(app)
-m = Migrate(app,db)
+m = Migrate(app, db)
 
-# Create the tables (Only needed on the first run)
-# with app.app_context():
-#     db.create_all()
+# Seed function to add default quizzes and questions
+def seed_database():
+    # Check if there are already quizzes to avoid duplicate insertion
+    if Quiz.query.count() == 0:
+        # Get or create subjects first (assuming these already exist)
+        subject1 = Subject.query.filter_by(subj_name='Mathematics').first()
+        if not subject1:
+            subject1 = Subject(subj_name='Mathematics', subj_desc='All math-related topics')
+            db.session.add(subject1)
+
+        subject2 = Subject.query.filter_by(subj_name='Science').first()
+        if not subject2:
+            subject2 = Subject(subj_name='Science', subj_desc='Various science topics')
+            db.session.add(subject2)
+
+        db.session.commit()
+
+        # Get or create chapters
+        chapter1 = Chapter.query.filter_by(ch_name='Algebra').first()
+        if not chapter1:
+            chapter1 = Chapter(ch_name='Algebra', ch_desc='Basic algebraic equations and formulas', subj_id=subject1.subj_id)
+            db.session.add(chapter1)
+
+        chapter2 = Chapter.query.filter_by(ch_name='Physics').first()
+        if not chapter2:
+            chapter2 = Chapter(ch_name='Physics', ch_desc='Basic concepts in physics', subj_id=subject2.subj_id)
+            db.session.add(chapter2)
+
+        db.session.commit()
+
+        # Add default quizzes with 2-minute duration
+        current_date = datetime.now().date()
+
+        quizzes = [
+            Quiz(
+                ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
+                date_of_quiz=current_date, time_duration="00:00", remarks="Basic Algebra Quiz"
+            ),
+            Quiz(
+                ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
+                date_of_quiz=current_date, time_duration="00:02", remarks="Advanced Algebra Quiz"
+            ),
+            Quiz(
+                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+                date_of_quiz=current_date, time_duration="00:02", remarks="Physics Fundamentals Quiz"
+            ),
+            Quiz(
+                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+                date_of_quiz=current_date, time_duration="00:02", remarks="Energy and Motion Quiz"
+            ),
+            Quiz(
+                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+                date_of_quiz=current_date, time_duration="00:02", remarks="Electricity and Magnetism Quiz"
+            )
+        ]
+
+        # Add quizzes to the session
+        db.session.bulk_save_objects(quizzes)
+        db.session.commit()
+        print("Default quizzes added to the database.")
+
+        # Now add 10 realistic questions for each quiz
+        questions = []
+
+        # Define some sample questions for the quizzes
+        algebra_questions = [
+            ("What is 5 + 7?", "12", "13", "14", "15", "12"),
+            ("What is the value of x in 2x + 4 = 12?", "2", "3", "4", "5", "4"),
+            ("What is the square root of 49?", "6", "7", "8", "9", "7"),
+            ("What is 3^3?", "27", "28", "30", "32", "27"),
+            ("Solve for y: 3y - 5 = 16", "5", "6", "7", "8", "7"),
+            ("What is the result of 15 divided by 3?", "4", "5", "6", "7", "5"),
+            ("What is the perimeter of a rectangle with sides 5 and 3?", "16", "18", "20", "22", "16"),
+            ("What is 12 x 9?", "108", "112", "116", "120", "108"),
+            ("Simplify: (3 + 2) x 4", "20", "18", "16", "14", "20"),
+            ("What is the next prime number after 7?", "8", "9", "11", "13", "11")
+        ]
+
+        physics_questions = [
+            ("What is the force required to accelerate a 5 kg object at 2 m/s²?", "5 N", "10 N", "15 N", "20 N", "10 N"),
+            ("What is the unit of electrical resistance?", "Ohm", "Watt", "Ampere", "Volt", "Ohm"),
+            ("What is the formula for gravitational potential energy?", "mgh", "mv²", "F=ma", "E=mc²", "mgh"),
+            ("How many joules are in 1 kilowatt-hour?", "1000", "2000", "3000", "3600", "3600"),
+            ("What is the speed of light?", "3 x 10^8 m/s", "3 x 10^6 m/s", "3 x 10^9 m/s", "3 x 10^7 m/s", "3 x 10^8 m/s"),
+            ("What is the law of conservation of energy?", "Energy can be created or destroyed.", "Energy is conserved.", "Energy cannot be converted.", "Energy increases.", "Energy is conserved."),
+            ("What is the unit of electric charge?", "Coulomb", "Ampere", "Volt", "Ohm", "Coulomb"),
+            ("What is the acceleration due to gravity on Earth?", "9.8 m/s²", "10 m/s²", "9.5 m/s²", "8.9 m/s²", "9.8 m/s²"),
+            ("What is the formula for kinetic energy?", "mv²", "1/2 mv²", "1/2 mgh", "mgh", "1/2 mv²"),
+            ("What is the unit of force?", "Newton", "Joule", "Watt", "Pascal", "Newton")
+        ]
+
+        # Add 10 questions for each quiz
+        for quiz_id in range(1, 6):  # Loop through each quiz (1-5 quizzes)
+            for i in range(1, 11):  # Add 10 questions for each quiz
+                if quiz_id <= 2:  # Algebra quizzes
+                    question_data = algebra_questions[i - 1]
+                else:  # Physics quizzes
+                    question_data = physics_questions[i - 1]
+
+                questions.append(
+                    Questions(
+                        quiz_id=quiz_id,
+                        subj_id=subject1.subj_id if quiz_id <= 2 else subject2.subj_id,
+                        ch_id=chapter1.ch_id if quiz_id <= 2 else chapter2.ch_id,
+                        q_title=question_data[0],
+                        option1=question_data[1],
+                        option2=question_data[2],
+                        option3=question_data[3],
+                        option4=question_data[4],
+                        correctoption=question_data[5]  # Correct answer
+                    )
+                )
+
+        # Add questions to the session
+        db.session.bulk_save_objects(questions)
+        db.session.commit()
+        print("10 realistic questions per quiz added to the database.")
+
+# Initialize the database and add default quizzes and questions
+with app.app_context():
+    db.create_all()  # Create all tables
+    seed_database()  # Add default quizzes and questions if no quizzes exist
+
 
 # Admin Routes
 @app.route('/admin/admin_base')
@@ -434,82 +559,75 @@ def quiz_list():
     user=User.query.filter_by(user_email=session['user_email']).first()
     return render_template('user/quiz_list.html',fullname=user.fullname,quizzes=quizzes)
 
-
 @app.route('/user/quiz/<int:quiz_id>/question/<int:question_id>', methods=['GET', 'POST'])
 def quiz(quiz_id, question_id):
-    # Fetch the quiz
+    # Fetch the quiz from the database
     quiz = Quiz.query.get(quiz_id)
     if not quiz:
         return redirect(url_for('quiz_list'))  # Redirect if quiz not found
 
-    # Get the list of all questions for the quiz, this will ensure the order of questions is maintained
+    # Get the list of all questions for the quiz
     questions = db.session.query(Questions).filter_by(quiz_id=quiz_id).all()
 
     # Get the total number of questions in the quiz
     total_questions = len(questions)
 
-    # Ensure that question_id exists in the list of questions (compare as integers)
+    # Ensure that question_id exists in the list of questions
     current_question = next((q for q in questions if q.q_id == question_id), None)
     if current_question is None:
         return redirect(url_for('quiz', quiz_id=quiz_id, question_id=questions[0].q_id))  # Redirect to first question if invalid
 
     # Initialize or decrement the quiz timer
     if 'quiz_time' not in session:
-        session['quiz_time'] = 300  # Set total time (e.g., 5 minutes = 300 seconds)
-    else:
-        session['quiz_time'] = int(session['quiz_time'])  # Ensure it's an integer
+        if quiz.time_duration:
+            # Convert hh:mm time duration to seconds
+            if quiz.time_duration == "00:00":
+                session['quiz_time'] = 10
+            else:
+                hours, minutes = map(int, quiz.time_duration.split(":"))
+                session['quiz_time'] = hours * 60 * 60 + minutes * 60
+        else:
+            session['quiz_time'] = 300  # Default 5 minutes (300 seconds)
 
-    # Decrement the timer
-    session['quiz_time'] -= 1
-
-    # If time is up, submit the quiz
+    # Decrement the timer and check if time is up
+    if session['quiz_time'] > 0:
+        session['quiz_time'] -= 1
     if session['quiz_time'] <= 0:
         session['quiz_time'] = 0  # Ensure time doesn't go negative
-        return redirect(url_for('submit_answer', quiz_id=quiz_id))  # Redirect to submit
+        # Redirect only once when time is up
+        return redirect(url_for('submit_answer', quiz_id=quiz_id))
 
     # Initialize the user's answers array in the session if not already set
     if 'quiz_answers' not in session:
-        session['quiz_answers'] = {}  # Hash map to store answers, question_id as the key
+        session['quiz_answers'] = {}
 
     # Get the user's chosen answer for this question
-    user_answer = session['quiz_answers'].get(str(question_id))  # Ensure the question_id is treated as a string in the session
+    user_answer = session['quiz_answers'].get(str(question_id))
 
     # Handle form submission (POST method)
     if request.method == 'POST':
-        answer = request.form.get('answer')  # Get the option text
-
+        answer = request.form.get('answer')
         if answer:
-            # Store the user's selected answer text (not option number) in the session dictionary
-            session['quiz_answers'][str(question_id)] = answer  # Ensure the question_id is stored as a string
+            session['quiz_answers'][str(question_id)] = answer
 
-        # Determine action based on the form button clicked
         action = request.form.get('action')
         if action == 'next':
-            # Move to next question (compare as integers)
             next_question = next((q for q in questions if q.q_id == question_id + 1), None)
             if next_question:
                 return redirect(url_for('quiz', quiz_id=quiz_id, question_id=next_question.q_id))
             else:
-                return redirect(url_for('submit_answer', quiz_id=quiz_id))  # Redirect to submit if it's the last question
-
+                return redirect(url_for('submit_answer', quiz_id=quiz_id))
         elif action == 'previous':
-            # Move to previous question (compare as integers)
             prev_question = next((q for q in questions if q.q_id == question_id - 1), None)
             if prev_question:
                 return redirect(url_for('quiz', quiz_id=quiz_id, question_id=prev_question.q_id))
-            else:
-                return redirect(url_for('quiz', quiz_id=quiz_id, question_id=question_id))  # Stay on the first question if there's no previous
-
         elif action == 'submit':
-            # Redirect to submit page
             return redirect(url_for('submit_answer', quiz_id=quiz_id))
 
-    # Ensure current question_id and next/previous are integers
     current_index = next((index for index, q in enumerate(questions) if q.q_id == question_id), None)
     next_question = questions[current_index + 1] if current_index + 1 < total_questions else None
     prev_question = questions[current_index - 1] if current_index - 1 >= 0 else None
 
-    # Pass the user's current answer and the remaining time to the template
     remaining_time = session['quiz_time']
 
     return render_template('user/quiz.html', quiz=quiz, question=current_question,
@@ -517,6 +635,7 @@ def quiz(quiz_id, question_id):
                            prev_question_id=prev_question.q_id if prev_question else None,
                            total_questions=total_questions, user_answer=user_answer,
                            question_id=question_id, remaining_time=remaining_time, questions=questions)
+
 
 
 @app.route('/user/quiz/<int:quiz_id>/submit', methods=['GET', 'POST'])
