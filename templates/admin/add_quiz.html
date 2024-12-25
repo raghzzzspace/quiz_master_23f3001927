@@ -4,39 +4,55 @@
 
 {% block content %}
 <div class="container-fluid mb-5">
-    <h3 class="text-center mb-4" style="color: blue; font-weight: 600;">Add New Quiz</h3>
-    
-    <form method="POST">
-        <div class="form-group">
-            <label for="subj_id">Select Subject</label>
-            <select class="form-control" id="subj_id" name="subj_id" required onchange="fetchChapters(this.value)">
-                <option value="" disabled selected>Select a subject</option>
-                {% for subject in subjects %}
-                    <option value="{{ subject.subj_id }}">{{ subject.subj_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ch_id">Select Chapter</label>
-            <select class="form-control" id="ch_id" name="ch_id" required>
-                <option value="" disabled selected>Select a chapter</option>
-                <!-- Chapters will be dynamically populated based on the selected subject -->
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="date_of_quiz">Date of Quiz</label>
-            <input type="date" class="form-control" id="date_of_quiz" name="date_of_quiz" required>
-        </div>
-        <div class="form-group">
-            <label for="time_duration">Time Duration (e.g., 05:00)</label>
-            <input type="text" class="form-control" id="time_duration" name="time_duration" placeholder="Enter duration in HH:MM format" required>
-        </div>
-        <div class="form-group">
-            <label for="remarks">Remarks</label>
-            <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter any additional details"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Add Quiz</button>
-    </form>
+    <div class="card shadow-sm p-4" style="border-radius: 15px;">
+        <h3 class="text-center mb-4" style="color: #3c3b6e; font-weight: 600;">Add New Quiz</h3>
+        
+        <form method="POST">
+            <!-- Select Subject -->
+            <div class="form-group mb-4">
+                <label for="subj_id" style="color: #3c3b6e; font-weight: 500;">Select Subject</label>
+                <select class="form-control" id="subj_id" name="subj_id" required onchange="fetchChapters(this.value)" style="border-radius: 8px; border: 1px solid #b3c6ff;">
+                    <option value="" disabled selected>Select a subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.subj_id }}">{{ subject.subj_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Select Chapter -->
+            <div class="form-group mb-4">
+                <label for="ch_id" style="color: #3c3b6e; font-weight: 500;">Select Chapter</label>
+                <select class="form-control" id="ch_id" name="ch_id" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+                    <option value="" disabled selected>Select a chapter</option>
+                </select>
+            </div>
+
+            <!-- Date of Quiz -->
+            <div class="form-group mb-4">
+                <label for="date_of_quiz" style="color: #3c3b6e; font-weight: 500;">Date of Quiz</label>
+                <input type="date" class="form-control" id="date_of_quiz" name="date_of_quiz" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+
+            <!-- Time Duration -->
+            <div class="form-group mb-4">
+                <label for="time_duration" style="color: #3c3b6e; font-weight: 500;">Time Duration (e.g., 05:00)</label>
+                <input type="text" class="form-control" id="time_duration" name="time_duration" placeholder="Enter duration in HH:MM format" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+
+            <!-- Remarks -->
+            <div class="form-group mb-4">
+                <label for="remarks" style="color: #3c3b6e; font-weight: 500;">Remarks</label>
+                <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter any additional details" style="border-radius: 8px; border: 1px solid #b3c6ff;"></textarea>
+            </div>
+
+            <!-- Add Quiz Button -->
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; border-color: #004a99; width: 50%; border-radius: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-weight: 600;">
+                    Add Quiz
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>

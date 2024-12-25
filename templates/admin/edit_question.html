@@ -4,39 +4,52 @@
 
 {% block content %}
 <div class="container-fluid mb-5">
-    <h3 class="text-center mb-4" style="color: blue; font-weight: 600;">Edit Question</h3>
-    
-    <form method="POST">
-        <div class="form-group">
-            <label for="q_title">Question Title</label>
-            <textarea class="form-control" id="q_title" name="q_title" rows="4" required>{{ question.q_title }}</textarea>
-        </div>
-        <div class="form-group">
-            <label for="option1">Option 1</label>
-            <input type="text" class="form-control" id="option1" name="option1" value="{{ question.option1 }}" required>
-        </div>
-        <div class="form-group">
-            <label for="option2">Option 2</label>
-            <input type="text" class="form-control" id="option2" name="option2" value="{{ question.option2 }}" required>
-        </div>
-        <div class="form-group">
-            <label for="option3">Option 3</label>
-            <input type="text" class="form-control" id="option3" name="option3" value="{{ question.option3 }}" required>
-        </div>
-        <div class="form-group">
-            <label for="option4">Option 4</label>
-            <input type="text" class="form-control" id="option4" name="option4" value="{{ question.option4 }}" required>
-        </div>
-        <div class="form-group">
-            <label for="correctoption">Correct Option</label>
-            <select class="form-control" id="correctoption" name="correctoption">
-                <option value="1" {% if question.correctoption == '1' %}selected{% endif %}>Option 1</option>
-                <option value="2" {% if question.correctoption == '2' %}selected{% endif %}>Option 2</option>
-                <option value="3" {% if question.correctoption == '3' %}selected{% endif %}>Option 3</option>
-                <option value="4" {% if question.correctoption == '4' %}selected{% endif %}>Option 4</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #004a99;">Update Question</button>
-    </form>
+    <div class="card shadow-sm p-4" style="border-radius: 15px;">
+        <h3 class="text-center mb-4" style="color: #3c3b6e; font-weight: 600;">Edit Question</h3>
+        
+        <form method="POST">
+            <!-- Question Title -->
+            <div class="form-group mb-4">
+                <label for="q_title" class="form-label" style="color: #3c3b6e; font-weight: 500;">Question Title</label>
+                <textarea class="form-control" id="q_title" name="q_title" rows="4" required style="border-radius: 8px; border: 1px solid #b3c6ff;">{{ question.q_title }}</textarea>
+            </div>
+
+            <!-- Options -->
+            <div class="form-group mb-4">
+                <label for="option1" class="form-label" style="color: #3c3b6e; font-weight: 500;">Option 1</label>
+                <input type="text" class="form-control" id="option1" name="option1" value="{{ question.option1 }}" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+            <div class="form-group mb-4">
+                <label for="option2" class="form-label" style="color: #3c3b6e; font-weight: 500;">Option 2</label>
+                <input type="text" class="form-control" id="option2" name="option2" value="{{ question.option2 }}" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+            <div class="form-group mb-4">
+                <label for="option3" class="form-label" style="color: #3c3b6e; font-weight: 500;">Option 3</label>
+                <input type="text" class="form-control" id="option3" name="option3" value="{{ question.option3 }}" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+            <div class="form-group mb-4">
+                <label for="option4" class="form-label" style="color: #3c3b6e; font-weight: 500;">Option 4</label>
+                <input type="text" class="form-control" id="option4" name="option4" value="{{ question.option4 }}" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
+            </div>
+
+            <!-- Correct Option -->
+            <div class="form-group mb-4">
+                <label for="correctoption" class="form-label" style="color: #3c3b6e; font-weight: 500;">Correct Option</label>
+                <select class="form-control" id="correctoption" name="correctoption" style="border-radius: 8px; border: 1px solid #b3c6ff;">
+                    <option value="1" {% if question.correctoption == '1' %}selected{% endif %}>Option 1</option>
+                    <option value="2" {% if question.correctoption == '2' %}selected{% endif %}>Option 2</option>
+                    <option value="3" {% if question.correctoption == '3' %}selected{% endif %}>Option 3</option>
+                    <option value="4" {% if question.correctoption == '4' %}selected{% endif %}>Option 4</option>
+                </select>
+            </div>
+
+            <!-- Update Button -->
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; border-color: #004a99; width: 50%; border-radius: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-weight: 600;">
+                    Update Question
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

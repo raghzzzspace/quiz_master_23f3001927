@@ -63,12 +63,24 @@
         <tbody>
             {% for quiz, subject in search_results %}
             <tr style="background: white;">
-                <td><a href="#" style="color: #004aad;">{{ quiz.quiz_id }}</a></td>
+                <td><a href="#" style="color: #004aad;" onclick="toggleDetails('{{ quiz.quiz_id }}')">{{ quiz.quiz_id }}</a></td>
                 <td>{{ quiz.remarks }}</td>  <!-- Assuming quiz name is stored in remarks -->
                 <td>{{ subject.subj_name }}</td>  <!-- Accessing the subject name from the joined subject -->
                 <td>{{ quiz.date_of_quiz }}</td>
                 <td>
-                    <a href="#" class="btn btn-info btn-sm" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border: none;">View</a>
+                    <a href="#" class="btn btn-info btn-sm" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border: none;" onclick="toggleDetails('{{ quiz.quiz_id }}')">View</a>
+                </td>
+            </tr>
+            <!-- Details Row (hidden by default) -->
+            <tr id="details-{{ quiz.quiz_id }}" class="details-row" style="display: none;">
+                <td colspan="5">
+                    <div class="details-content p-3 border-top" style="background-color: #f9fafb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                        <h5 class="mb-3" style="color: #3c3b6e;">Details for {{ quiz.remarks }}:</h5>
+                        <p><strong>Quiz ID:</strong> {{ quiz.quiz_id }}</p>
+                        <p><strong>Quiz Name:</strong> {{ quiz.remarks }}</p>
+                        <p><strong>Subject:</strong> {{ subject.subj_name }}</p>
+                        <p><strong>Date:</strong> {{ quiz.date_of_quiz }}</p>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
@@ -78,4 +90,31 @@
     <p class="text-center" style="font-weight: 500; color: #888;">No results found for your search.</p>
     {% endif %}
 </div>
+
+<!-- JavaScript to toggle details visibility -->
+<script>
+    // Toggle function to show or hide the details row
+    function toggleDetails(quizId) {
+        var detailsRow = document.getElementById('details-' + quizId);
+        if (detailsRow.style.display === "none" || detailsRow.style.display === "") {
+            detailsRow.style.display = "table-row";  // Show the row
+            detailsRow.classList.add('fade-in');  // Apply the fade-in effect
+        } else {
+            detailsRow.style.display = "none";  // Hide the row
+        }
+    }
+</script>
+
+<!-- Add custom CSS for smooth fade-in effect -->
+<style>
+    .details-row {
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+        display: none;
+    }
+    .fade-in {
+        opacity: 1 !important;
+    }
+</style>
+
 {% endblock %}

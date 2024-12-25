@@ -5,6 +5,7 @@ from models import db, Admin, User, Subject, Chapter, Quiz, Questions, Scores, U
 from flask_migrate import Migrate
 from flask import session, flash
 from datetime import datetime
+from sqlalchemy import func
 import secrets
 
 app = Flask(__name__)
@@ -65,10 +66,70 @@ def admin_dashboard():
 
     return render_template('admin/admin_dashboard.html', subject_data=subjects)
 
+from sqlalchemy.orm import aliased
+from sqlalchemy import or_
 
-@app.route('/admin/admin_search')
+@app.route('/admin/admin_search', methods=['GET'])
 def admin_search():
-    return render_template('admin/admin_search.html')
+    search_by = request.args.get('searchBy', '')  # Get the search category (user, subject, quiz)
+    search_value = request.args.get('searchValue', '').strip()  # Get the search term
+
+    search_results = []
+    query_options = []  # This will store the attributes for the "Search Query" dropdown
+
+    # Determine search attributes based on "searchBy"
+    if search_by == 'user':
+        query_options = ['fullname', 'user_email', 'qualification']  # User search attributes
+        if search_value:
+            search_results = User.query.filter(
+                (User.fullname.ilike(f'{search_value}%')) |  # Starts with
+                (User.user_email.ilike(f'{search_value}%')) |
+                (User.qualification.ilike(f'{search_value}%'))
+            ).all()
+    elif search_by == 'subject':
+        query_options = ['subj_name', 'subj_desc']  # Subject search attributes
+        if search_value:
+            search_results = Subject.query.filter(
+                (Subject.subj_name.ilike(f'{search_value}%')) |  # Starts with
+                (Subject.subj_desc.ilike(f'{search_value}%'))
+            ).all()
+    elif search_by == 'quiz':
+        query_options = ['quiz_id', 'date_of_quiz']  # Quiz search attributes
+        if search_value:
+            search_results = Quiz.query.filter(
+                (Quiz.quiz_id.ilike(f'{search_value}%')) |  # Starts with
+                (Quiz.date_of_quiz.ilike(f'{search_value}%'))
+            ).all()
+
+    # Format the results based on the selected category
+    formatted_results = []
+    for result in search_results:
+        if search_by == 'user':
+            formatted_results.append({
+                'id': result.user_email,  # User email as the ID
+                'name': result.fullname,
+                'type': 'User',
+                'date': result.dob.strftime('%Y-%m-%d') if result.dob else 'N/A'
+            })
+        elif search_by == 'subject':
+            formatted_results.append({
+                'id': result.subj_id,
+                'name': result.subj_name,
+                'type': 'Subject',
+                'date': 'N/A'  # No date for subjects
+            })
+        elif search_by == 'quiz':
+            formatted_results.append({
+                'id': result.quiz_id,
+                'name': result.remarks,
+                'type': 'Quiz',
+                'date': result.date_of_quiz.strftime('%Y-%m-%d') if result.date_of_quiz else 'N/A'
+            })
+
+    # Pass data to the template
+    return render_template('admin/admin_search.html', search_by=search_by, search_value=search_value, 
+                           search_results=formatted_results, query_options=query_options)
+
 
 @app.route('/admin/admin_quiz')
 def admin_quiz():
@@ -95,9 +156,33 @@ def admin_quiz():
     return render_template('admin/admin_quiz.html', quizzes=quizzes_data)
 
 
+# Route to handle admin summary
 @app.route('/admin/summary')
 def admin_summary():
-    return render_template('admin/admin_summary.html')
+    # Fetch top scores by subject using JOINs
+    top_scores = db.session.query(
+        Subject.subj_name,
+        func.max(Scores.scored).label('top_score')
+    ).join(
+        Quiz, Quiz.subj_id == Subject.subj_id
+    ).join(
+        Scores, Scores.quiz_id == Quiz.quiz_id
+    ).group_by(Subject.subj_id).all()
+
+    # Fetch user attempts by subject using JOINs
+    user_attempts = db.session.query(
+        Subject.subj_name,
+        func.count(Scores.s_id).label('attempt_count')
+    ).join(
+        Quiz, Quiz.subj_id == Subject.subj_id
+    ).join(
+        Scores, Scores.quiz_id == Quiz.quiz_id
+    ).group_by(Subject.subj_id).all()
+
+    # Render the admin summary template with data
+    return render_template('admin/admin_summary.html', top_scores=top_scores, user_attempts=user_attempts)
+
+
 
 # Route for Adding a Chapter
 @app.route('/admin/add_chapter/<int:subject_id>', methods=['GET', 'POST'])
@@ -132,20 +217,25 @@ def edit_chapter(subject_id, chapter_id):
     return render_template('admin/edit_chapter.html', chapter=chapter)
 
 # Route for Deleting a Chapter
-@app.route('/admin/delete_chapter/<int:subject_id>/<int:chapter_id>', methods=['POST'])
+@app.route('/admin/delete_chapter/<int:subject_id>/<int:chapter_id>', methods=['GET', 'POST'])
 def delete_chapter(subject_id, chapter_id):
     # Fetch the chapter based on both subject_id and chapter_id
     chapter = Chapter.query.filter_by(subj_id=subject_id, ch_id=chapter_id).first()
     
-    # Check if the chapter exists
-    if chapter:
-        db.session.delete(chapter)
-        db.session.commit()
-        flash('Chapter deleted successfully!', 'danger')
-    else:
-        flash('Chapter not found.', 'warning')
-    
-    return redirect(url_for('admin_dashboard'))
+    # Handle POST request for deletion
+    if request.method == 'POST':
+        if chapter:
+            db.session.delete(chapter)
+            db.session.commit()
+            flash('Chapter deleted successfully!', 'danger')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Chapter not found.', 'warning')
+            return redirect(url_for('admin_dashboard'))
+
+    # Handle GET request, render the confirmation page
+    return render_template('admin/delete_chapter.html', chapter=chapter)
+
 
 
 # Route for Adding a Subject
@@ -210,6 +300,21 @@ def add_question(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     
     if request.method == 'POST':
+        # Get the option text corresponding to the correct option number
+        correct_option_value = request.form['correctoption']
+        
+        # Assign the correct option based on the selected value
+        correct_option_text = ""
+        if correct_option_value == '1':
+            correct_option_text = request.form['option1']
+        elif correct_option_value == '2':
+            correct_option_text = request.form['option2']
+        elif correct_option_value == '3':
+            correct_option_text = request.form['option3']
+        elif correct_option_value == '4':
+            correct_option_text = request.form['option4']
+        
+        # Create a new question object with the correct options
         new_question = Questions(
             quiz_id=quiz.quiz_id,
             subj_id=quiz.subj_id,
@@ -219,7 +324,7 @@ def add_question(quiz_id):
             option2=request.form['option2'],
             option3=request.form['option3'],
             option4=request.form['option4'],
-            correctoption=request.form['correctoption']
+            correctoption=correct_option_text  # Save the actual option text
         )
         
         db.session.add(new_question)
@@ -229,6 +334,7 @@ def add_question(quiz_id):
         return redirect(url_for('admin_quiz', quiz_id=quiz_id))
     
     return render_template('admin/add_question.html', quiz=quiz)
+
 
 @app.route('/admin/add_quiz', methods=['GET', 'POST'])
 def add_quiz():

@@ -3,43 +3,46 @@
 {% block title %}Edit Chapter - Quizzy Quest{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
-    <h3 class="text-center mb-4" style="color: #003366; font-weight: 600;">Edit Chapter: {{ chapter.ch_name }}</h3>
+<div class="container-fluid mb-5">
+    <div class="card shadow-sm p-4" style="border-radius: 15px;">
+        <h3 class="text-center mb-4" style="color: #3c3b6e; font-weight: 600;">Edit Chapter: {{ chapter.ch_name }}</h3>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="alert-container mb-4">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container mb-4">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('edit_chapter', subject_id=chapter.subj_id, chapter_id=chapter.ch_id) }}">
+            <div class="form-group mb-4">
+                <label for="ch_name" style="color: #3c3b6e; font-weight: 500;">Chapter Name</label>
+                <input type="text" class="form-control" id="ch_name" name="ch_name" value="{{ chapter.ch_name }}" required style="border-radius: 8px; border: 1px solid #b3c6ff;">
             </div>
-        {% endif %}
-    {% endwith %}
 
-    <div class="card shadow-lg border-light">
-        <div class="card-header text-center" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; font-weight: 600;">
-            Edit Chapter Details
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('edit_chapter', subject_id=chapter.subj_id, chapter_id=chapter.ch_id) }}">
-                <div class="form-group">
-                    <label for="ch_name" style="font-weight: 500;">Chapter Name</label>
-                    <input type="text" class="form-control" id="ch_name" name="ch_name" value="{{ chapter.ch_name }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="ch_desc" style="font-weight: 500;">Chapter Description</label>
-                    <textarea class="form-control" id="ch_desc" name="ch_desc" rows="3">{{ chapter.ch_desc }}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); border-color: #003366;">Update Chapter</button>
-                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary btn-lg ml-3" style="background: linear-gradient(135deg, #cccccc, #999999); border-color: #777;">Cancel</a>
-            </form>
-        </div>
+            <div class="form-group mb-4">
+                <label for="ch_desc" style="color: #3c3b6e; font-weight: 500;">Chapter Description</label>
+                <textarea class="form-control" id="ch_desc" name="ch_desc" rows="3" style="border-radius: 8px; border: 1px solid #b3c6ff;">{{ chapter.ch_desc }}</textarea>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg" style="background: linear-gradient(135deg, #3c3b6e, #6f63ff); color: white; border-color: #003366; width: 48%; border-radius: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    Update Chapter
+                </button>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-lg" style="background: linear-gradient(135deg, #cccccc, #999999); border-color: #777; color: white; width: 48%; border-radius: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

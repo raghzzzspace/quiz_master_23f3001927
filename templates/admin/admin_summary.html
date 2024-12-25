@@ -32,12 +32,12 @@
     gradient.addColorStop(0, '#6f63ff'); // Start with the admin brand color
     gradient.addColorStop(1, '#3c3b6e'); // End with a darker shade
 
-    // Sample data for Top Scores by Subject (Bar Chart)
+    // Top Scores data passed from Flask
     const topScoresData = {
-        labels: ['Math', 'Science', 'History', 'Geography', 'English'], // Replace with actual subjects
+        labels: {{ top_scores|map(attribute='subj_name')|list|tojson }},
         datasets: [{
             label: 'Top Scores',
-            data: [95, 88, 92, 89, 90], // Replace with actual top scores for each subject
+            data: {{ top_scores|map(attribute='top_score')|list|tojson }},
             backgroundColor: gradient, // Apply the gradient
             borderColor: '#4e4bdb', // Darker border
             borderWidth: 1
@@ -90,12 +90,12 @@
     // Get the context for the Pie Chart (Subject-wise User Attempts)
     const ctxPie = document.getElementById('subjectAttemptsPieChart').getContext('2d');
 
-    // Sample data for Subject-wise User Attempts (Pie Chart)
+    // Subject Attempts data passed from Flask
     const subjectAttemptsData = {
-        labels: ['Math', 'Science', 'History', 'Geography', 'English'], // Replace with actual subjects
+        labels: {{ user_attempts|map(attribute='subj_name')|list|tojson }},
         datasets: [{
             label: 'User Attempts',
-            data: [1200, 950, 700, 400, 1100], // Replace with actual number of attempts per subject
+            data: {{ user_attempts|map(attribute='attempt_count')|list|tojson }},
             backgroundColor: ['#3c3b6e', '#6f63ff', '#ff6f61', '#f7b731', '#48dbfb'], // Unique colors for each slice
             hoverOffset: 4
         }]
