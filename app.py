@@ -27,6 +27,21 @@ m = Migrate(app, db)
 
 # Seed function to add default quizzes and questions
 def seed_database():
+    admin_email = 'quizadmin@gmail.com'
+    admin_password = '2222'
+
+    # Create admin if it doesn't exist
+    if not Admin.query.filter_by(email=admin_email).first():
+        hashed_password = generate_password_hash(admin_password)
+        new_admin = Admin(
+            email=admin_email,
+            password=hashed_password
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        print("Admin user created.")
+    else:
+        print("Admin user already exists.")
     # Check if there are already quizzes to avoid duplicate insertion
     if Quiz.query.count() == 0:
         # Get or create subjects first (assuming these already exist)
@@ -780,15 +795,11 @@ def quiz_view(quiz_id):
     subject = Subject.query.filter_by(subj_id=quiz.subj_id).first()
     chapter = Chapter.query.filter_by(ch_id=quiz.ch_id).first()
 
-    # Fetch all related questions for the quiz
-    questions = Questions.query.filter_by(quiz_id=quiz_id).all()
-
     # Calculate the number of questions
-    num_questions = len(questions)
+    num_questions = Questions.query.filter_by(quiz_id=quiz_id).count()
 
-    # Pass all the relevant details to the template
-    return render_template('user/quiz_view.html', quiz=quiz, subject=subject, chapter=chapter, num_questions=num_questions, questions=questions)
-
+    # Pass only the relevant details to the template
+    return render_template('user/quiz_view.html', quiz=quiz, subject=subject, chapter=chapter, num_questions=num_questions)
 
 
 @app.route('/user/scores')

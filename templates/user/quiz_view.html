@@ -22,23 +22,6 @@
                     <p><strong style="color: #ffffff;">Duration:</strong> <span style="color: #f0f0f0;">{{ quiz.time_duration }}</span></p>
                 </div>
             </div>
-            
-            <!-- Questions List -->
-            <h4 class="text-center mt-4 mb-3" style="color: #ffffff; font-weight: 600;">Questions</h4>
-            <div class="list-group">
-                {% for question in questions %}
-                <div class="list-group-item mb-3" style="background: linear-gradient(135deg, #f0f0f0, #d3e1f1); border: 1px solid #dbe2eb; border-radius: 8px; padding: 15px;">
-                    <p><strong style="color: #004aad;">Q{{ loop.index }}:</strong> <span style="color: #333;">{{ question.q_title }}</span></p>
-                    <p><strong style="color: #004aad;">Options:</strong></p>
-                    <ul style="padding-left: 20px;">
-                        <li style="color: #333;">{{ question.option1 }}</li>
-                        <li style="color: #333;">{{ question.option2 }}</li>
-                        <li style="color: #333;">{{ question.option3 }}</li>
-                        <li style="color: #333;">{{ question.option4 }}</li>
-                    </ul>
-                </div>
-                {% endfor %}
-            </div>
         </div>
     </div>
 </div>
