@@ -6,9 +6,8 @@ Quiz Master is an interactive quiz application built with Flask. It allows users
 
 ## Features
 - Multiple-choice quiz system
-- Timer-based questions (if applicable)
+- Timer-based questions
 - Score tracking
-- Dynamic question loading
 
 ## Installation
 
