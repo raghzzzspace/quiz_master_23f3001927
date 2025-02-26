@@ -18,7 +18,10 @@ app.secret_key = secrets.token_hex(16)
 tmp_dir = os.getenv('VERCEL_TEMP', '/tmp')
 
 # Configuration for the database
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{tmp_dir}/quiz_master_database.db"
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{tmp_dir}/quiz_master_database.db"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///C:/Users/hp/Desktop/quiz_master_database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
@@ -26,142 +29,142 @@ db.init_app(app)
 m = Migrate(app, db)
 
 # Seed function to add default quizzes and questions
-def seed_database():
-    admin_email = 'quizadmin@gmail.com'
-    admin_password = '2222'
+# def seed_database():
+#     admin_email = 'quizadmin@gmail.com'
+#     admin_password = '2222'
 
-    # Create admin if it doesn't exist
-    if not Admin.query.filter_by(email=admin_email).first():
-        hashed_password = generate_password_hash(admin_password)
-        new_admin = Admin(
-            email=admin_email,
-            password=hashed_password
-        )
-        db.session.add(new_admin)
-        db.session.commit()
-        print("Admin user created.")
-    else:
-        print("Admin user already exists.")
-    # Check if there are already quizzes to avoid duplicate insertion
-    if Quiz.query.count() == 0:
-        # Get or create subjects first (assuming these already exist)
-        subject1 = Subject.query.filter_by(subj_name='Mathematics').first()
-        if not subject1:
-            subject1 = Subject(subj_name='Mathematics', subj_desc='All math-related topics')
-            db.session.add(subject1)
+#     # Create admin if it doesn't exist
+#     if not Admin.query.filter_by(email=admin_email).first():
+#         hashed_password = generate_password_hash(admin_password)
+#         new_admin = Admin(
+#             email=admin_email,
+#             password=hashed_password
+#         )
+#         db.session.add(new_admin)
+#         db.session.commit()
+#         print("Admin user created.")
+#     else:
+#         print("Admin user already exists.")
+#     # Check if there are already quizzes to avoid duplicate insertion
+#     if Quiz.query.count() == 0:
+#         # Get or create subjects first (assuming these already exist)
+#         subject1 = Subject.query.filter_by(subj_name='Mathematics').first()
+#         if not subject1:
+#             subject1 = Subject(subj_name='Mathematics', subj_desc='All math-related topics')
+#             db.session.add(subject1)
 
-        subject2 = Subject.query.filter_by(subj_name='Science').first()
-        if not subject2:
-            subject2 = Subject(subj_name='Science', subj_desc='Various science topics')
-            db.session.add(subject2)
+#         subject2 = Subject.query.filter_by(subj_name='Science').first()
+#         if not subject2:
+#             subject2 = Subject(subj_name='Science', subj_desc='Various science topics')
+#             db.session.add(subject2)
 
-        db.session.commit()
+#         db.session.commit()
 
-        # Get or create chapters
-        chapter1 = Chapter.query.filter_by(ch_name='Algebra').first()
-        if not chapter1:
-            chapter1 = Chapter(ch_name='Algebra', ch_desc='Basic algebraic equations and formulas', subj_id=subject1.subj_id)
-            db.session.add(chapter1)
+#         # Get or create chapters
+#         chapter1 = Chapter.query.filter_by(ch_name='Algebra').first()
+#         if not chapter1:
+#             chapter1 = Chapter(ch_name='Algebra', ch_desc='Basic algebraic equations and formulas', subj_id=subject1.subj_id)
+#             db.session.add(chapter1)
 
-        chapter2 = Chapter.query.filter_by(ch_name='Physics').first()
-        if not chapter2:
-            chapter2 = Chapter(ch_name='Physics', ch_desc='Basic concepts in physics', subj_id=subject2.subj_id)
-            db.session.add(chapter2)
+#         chapter2 = Chapter.query.filter_by(ch_name='Physics').first()
+#         if not chapter2:
+#             chapter2 = Chapter(ch_name='Physics', ch_desc='Basic concepts in physics', subj_id=subject2.subj_id)
+#             db.session.add(chapter2)
 
-        db.session.commit()
+#         db.session.commit()
 
-        # Add default quizzes with 2-minute duration
-        current_date = datetime.now().date()
+#         # Add default quizzes with 2-minute duration
+#         current_date = datetime.now().date()
 
-        quizzes = [
-            Quiz(
-                ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
-                date_of_quiz=current_date, time_duration="00:00", remarks="Basic Algebra Quiz"
-            ),
-            Quiz(
-                ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
-                date_of_quiz=current_date, time_duration="00:02", remarks="Advanced Algebra Quiz"
-            ),
-            Quiz(
-                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
-                date_of_quiz=current_date, time_duration="00:02", remarks="Physics Fundamentals Quiz"
-            ),
-            Quiz(
-                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
-                date_of_quiz=current_date, time_duration="00:02", remarks="Energy and Motion Quiz"
-            ),
-            Quiz(
-                ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
-                date_of_quiz=current_date, time_duration="00:02", remarks="Electricity and Magnetism Quiz"
-            )
-        ]
+#         quizzes = [
+#             Quiz(
+#                 ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
+#                 date_of_quiz=current_date, time_duration="00:02", remarks="Basic Algebra Quiz"
+#             ),
+#             Quiz(
+#                 ch_id=chapter1.ch_id, subj_id=subject1.subj_id,
+#                 date_of_quiz=current_date, time_duration="00:02", remarks="Advanced Algebra Quiz"
+#             ),
+#             Quiz(
+#                 ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+#                 date_of_quiz=current_date, time_duration="00:02", remarks="Physics Fundamentals Quiz"
+#             ),
+#             Quiz(
+#                 ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+#                 date_of_quiz=current_date, time_duration="00:02", remarks="Energy and Motion Quiz"
+#             ),
+#             Quiz(
+#                 ch_id=chapter2.ch_id, subj_id=subject2.subj_id,
+#                 date_of_quiz=current_date, time_duration="00:02", remarks="Electricity and Magnetism Quiz"
+#             )
+#         ]
 
-        # Add quizzes to the session
-        db.session.bulk_save_objects(quizzes)
-        db.session.commit()
-        print("Default quizzes added to the database.")
+#         # Add quizzes to the session
+#         db.session.bulk_save_objects(quizzes)
+#         db.session.commit()
+#         print("Default quizzes added to the database.")
 
-        # Now add 10 realistic questions for each quiz
-        questions = []
+#         # Now add 10 realistic questions for each quiz
+#         questions = []
 
-        # Define some sample questions for the quizzes
-        algebra_questions = [
-            ("What is 5 + 7?", "12", "13", "14", "15", "12"),
-            ("What is the value of x in 2x + 4 = 12?", "2", "3", "4", "5", "4"),
-            ("What is the square root of 49?", "6", "7", "8", "9", "7"),
-            ("What is 3^3?", "27", "28", "30", "32", "27"),
-            ("Solve for y: 3y - 5 = 16", "5", "6", "7", "8", "7"),
-            ("What is the result of 15 divided by 3?", "4", "5", "6", "7", "5"),
-            ("What is the perimeter of a rectangle with sides 5 and 3?", "16", "18", "20", "22", "16"),
-            ("What is 12 x 9?", "108", "112", "116", "120", "108"),
-            ("Simplify: (3 + 2) x 4", "20", "18", "16", "14", "20"),
-            ("What is the next prime number after 7?", "8", "9", "11", "13", "11")
-        ]
+#         # Define some sample questions for the quizzes
+#         algebra_questions = [
+#             ("What is 5 + 7?", "12", "13", "14", "15", "12"),
+#             ("What is the value of x in 2x + 4 = 12?", "2", "3", "4", "5", "4"),
+#             ("What is the square root of 49?", "6", "7", "8", "9", "7"),
+#             ("What is 3^3?", "27", "28", "30", "32", "27"),
+#             ("Solve for y: 3y - 5 = 16", "5", "6", "7", "8", "7"),
+#             ("What is the result of 15 divided by 3?", "4", "5", "6", "7", "5"),
+#             ("What is the perimeter of a rectangle with sides 5 and 3?", "16", "18", "20", "22", "16"),
+#             ("What is 12 x 9?", "108", "112", "116", "120", "108"),
+#             ("Simplify: (3 + 2) x 4", "20", "18", "16", "14", "20"),
+#             ("What is the next prime number after 7?", "8", "9", "11", "13", "11")
+#         ]
 
-        physics_questions = [
-            ("What is the force required to accelerate a 5 kg object at 2 m/s²?", "5 N", "10 N", "15 N", "20 N", "10 N"),
-            ("What is the unit of electrical resistance?", "Ohm", "Watt", "Ampere", "Volt", "Ohm"),
-            ("What is the formula for gravitational potential energy?", "mgh", "mv²", "F=ma", "E=mc²", "mgh"),
-            ("How many joules are in 1 kilowatt-hour?", "1000", "2000", "3000", "3600", "3600"),
-            ("What is the speed of light?", "3 x 10^8 m/s", "3 x 10^6 m/s", "3 x 10^9 m/s", "3 x 10^7 m/s", "3 x 10^8 m/s"),
-            ("What is the law of conservation of energy?", "Energy can be created or destroyed.", "Energy is conserved.", "Energy cannot be converted.", "Energy increases.", "Energy is conserved."),
-            ("What is the unit of electric charge?", "Coulomb", "Ampere", "Volt", "Ohm", "Coulomb"),
-            ("What is the acceleration due to gravity on Earth?", "9.8 m/s²", "10 m/s²", "9.5 m/s²", "8.9 m/s²", "9.8 m/s²"),
-            ("What is the formula for kinetic energy?", "mv²", "1/2 mv²", "1/2 mgh", "mgh", "1/2 mv²"),
-            ("What is the unit of force?", "Newton", "Joule", "Watt", "Pascal", "Newton")
-        ]
+#         physics_questions = [
+#             ("What is the force required to accelerate a 5 kg object at 2 m/s²?", "5 N", "10 N", "15 N", "20 N", "10 N"),
+#             ("What is the unit of electrical resistance?", "Ohm", "Watt", "Ampere", "Volt", "Ohm"),
+#             ("What is the formula for gravitational potential energy?", "mgh", "mv²", "F=ma", "E=mc²", "mgh"),
+#             ("How many joules are in 1 kilowatt-hour?", "1000", "2000", "3000", "3600", "3600"),
+#             ("What is the speed of light?", "3 x 10^8 m/s", "3 x 10^6 m/s", "3 x 10^9 m/s", "3 x 10^7 m/s", "3 x 10^8 m/s"),
+#             ("What is the law of conservation of energy?", "Energy can be created or destroyed.", "Energy is conserved.", "Energy cannot be converted.", "Energy increases.", "Energy is conserved."),
+#             ("What is the unit of electric charge?", "Coulomb", "Ampere", "Volt", "Ohm", "Coulomb"),
+#             ("What is the acceleration due to gravity on Earth?", "9.8 m/s²", "10 m/s²", "9.5 m/s²", "8.9 m/s²", "9.8 m/s²"),
+#             ("What is the formula for kinetic energy?", "mv²", "1/2 mv²", "1/2 mgh", "mgh", "1/2 mv²"),
+#             ("What is the unit of force?", "Newton", "Joule", "Watt", "Pascal", "Newton")
+#         ]
 
-        # Add 10 questions for each quiz
-        for quiz_id in range(1, 6):  # Loop through each quiz (1-5 quizzes)
-            for i in range(1, 11):  # Add 10 questions for each quiz
-                if quiz_id <= 2:  # Algebra quizzes
-                    question_data = algebra_questions[i - 1]
-                else:  # Physics quizzes
-                    question_data = physics_questions[i - 1]
+#         # Add 10 questions for each quiz
+#         for quiz_id in range(1, 6):  # Loop through each quiz (1-5 quizzes)
+#             for i in range(1, 11):  # Add 10 questions for each quiz
+#                 if quiz_id <= 2:  # Algebra quizzes
+#                     question_data = algebra_questions[i - 1]
+#                 else:  # Physics quizzes
+#                     question_data = physics_questions[i - 1]
 
-                questions.append(
-                    Questions(
-                        quiz_id=quiz_id,
-                        subj_id=subject1.subj_id if quiz_id <= 2 else subject2.subj_id,
-                        ch_id=chapter1.ch_id if quiz_id <= 2 else chapter2.ch_id,
-                        q_title=question_data[0],
-                        option1=question_data[1],
-                        option2=question_data[2],
-                        option3=question_data[3],
-                        option4=question_data[4],
-                        correctoption=question_data[5]  # Correct answer
-                    )
-                )
+#                 questions.append(
+#                     Questions(
+#                         quiz_id=quiz_id,
+#                         subj_id=subject1.subj_id if quiz_id <= 2 else subject2.subj_id,
+#                         ch_id=chapter1.ch_id if quiz_id <= 2 else chapter2.ch_id,
+#                         q_title=question_data[0],
+#                         option1=question_data[1],
+#                         option2=question_data[2],
+#                         option3=question_data[3],
+#                         option4=question_data[4],
+#                         correctoption=question_data[5]  # Correct answer
+#                     )
+#                 )
 
-        # Add questions to the session
-        db.session.bulk_save_objects(questions)
-        db.session.commit()
-        print("10 realistic questions per quiz added to the database.")
+#         # Add questions to the session
+#         db.session.bulk_save_objects(questions)
+#         db.session.commit()
+#         print("10 realistic questions per quiz added to the database.")
 
 # Initialize the database and add default quizzes and questions
 with app.app_context():
     db.create_all()  # Create all tables
-    seed_database()  # Add default quizzes and questions if no quizzes exist
+    #seed_database()  # Add default quizzes and questions if no quizzes exist
 
 
 # Admin Routes
