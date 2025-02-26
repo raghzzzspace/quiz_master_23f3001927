@@ -1,0 +1,226 @@
+openapi: 3.0.0
+info:
+  title: Quizzy Quest API
+  description: API for managing quizzes, questions, users, and scores.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+paths:
+  /admin/dashboard:
+    get:
+      summary: Get Admin Dashboard Data
+      description: Fetches subjects, chapters, and question counts for the admin panel.
+      responses:
+        '200':
+          description: Dashboard data retrieved successfully
+  /admin/admin_quiz:
+    get:
+      summary: Get All Quizzes
+      description: Retrieves a list of all quizzes along with their questions.
+      responses:
+        '200':
+          description: List of quizzes fetched successfully
+  /admin/add_quiz:
+    post:
+      summary: Add a New Quiz
+      description: Creates a new quiz under a selected subject and chapter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subj_id:
+                  type: integer
+                ch_id:
+                  type: integer
+                date_of_quiz:
+                  type: string
+                  format: date
+                time_duration:
+                  type: string
+                remarks:
+                  type: string
+      responses:
+        '201':
+          description: Quiz added successfully
+  /admin/edit_quiz/{quiz_id}:
+    put:
+      summary: Edit an Existing Quiz
+      description: Updates details of an existing quiz.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_of_quiz:
+                  type: string
+                  format: date
+                time_duration:
+                  type: string
+                remarks:
+                  type: string
+      responses:
+        '200':
+          description: Quiz updated successfully
+  /admin/delete_quiz/{quiz_id}:
+    delete:
+      summary: Delete a Quiz
+      description: Removes a quiz from the system.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Quiz deleted successfully
+  /admin/add_question/{quiz_id}:
+    post:
+      summary: Add a Question to a Quiz
+      description: Adds a new question to a quiz.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q_title:
+                  type: string
+                option1:
+                  type: string
+                option2:
+                  type: string
+                option3:
+                  type: string
+                option4:
+                  type: string
+                correctoption:
+                  type: string
+      responses:
+        '201':
+          description: Question added successfully
+  /admin/edit_question/{question_id}:
+    put:
+      summary: Edit a Question
+      description: Updates an existing question.
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q_title:
+                  type: string
+                option1:
+                  type: string
+                option2:
+                  type: string
+                option3:
+                  type: string
+                option4:
+                  type: string
+                correctoption:
+                  type: string
+      responses:
+        '200':
+          description: Question updated successfully
+  /admin/delete_question/{question_id}:
+    delete:
+      summary: Delete a Question
+      description: Removes a question from the system.
+      parameters:
+        - name: question_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Question deleted successfully
+  /user/register:
+    post:
+      summary: Register a New User
+      description: Allows users to create an account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                fullname:
+                  type: string
+                qualification:
+                  type: string
+                dob:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: User registered successfully
+  /user/quiz-list:
+    get:
+      summary: List Available Quizzes
+      description: Fetches upcoming quizzes that the user can participate in.
+      responses:
+        '200':
+          description: List of available quizzes fetched
+  /user/quiz/{quiz_id}/submit:
+    post:
+      summary: Submit Quiz Answers
+      description: Stores user's answers and calculates the score.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      q_id:
+                        type: integer
+                      chosen_option:
+                        type: string
+      responses:
+        '200':
+          description: Quiz submitted successfully
