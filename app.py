@@ -18,7 +18,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 m = Migrate(app, db)
 
+
 # Admin Routes ////////////////////////////////////////////////
+
 
 @app.route('/admin/admin_base')
 def admin_base():
